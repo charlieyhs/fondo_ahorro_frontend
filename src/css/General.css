@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.fondoLogin {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(90deg, #f1f0fe 75%, #dbdcf2 60%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    position: relative; /* Habilitar posicionamiento absoluto dentro de este contenedor */
+}
+
+.card {
+    width: 50vh;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    position: absolute; /* Posicionar la tarjeta absolutamente */
+    left: 70%; /* Centrado horizontalmente */
+    transform: translateX(-50%); /* Ajuste para centrarla con precisión */
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px) translateX(-50%); /* Efecto de hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card-content {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.card-footer {
+    text-align: right;
+    margin-top: 15px;
+    color: #007bff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.card-footer:hover {
+    text-decoration: underline;
+}
