@@ -7,7 +7,7 @@ body {
     height: 100vh;
     background: linear-gradient(90deg, #f1f0fe 75%, #dbdcf2 60%);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     border-radius: 10px;
     position: relative; /* Habilitar posicionamiento absoluto dentro de este contenedor */
@@ -20,7 +20,7 @@ body {
     border-radius: 10px;
     border: 1px solid #e0e0e0;
     position: absolute; /* Posicionar la tarjeta absolutamente */
-    left: 70%; /* Centrado horizontalmente */
+    left: 75%; /* Centrado horizontalmente */
     transform: translateX(-50%); /* Ajuste para centrarla con precisión */
     transition: transform 0.2s;
 }
@@ -43,14 +43,19 @@ body {
     line-height: 1.5;
 }
 
-.card-footer {
-    text-align: right;
-    margin-top: 15px;
-    color: #007bff;
-    font-size: 0.9rem;
-    cursor: pointer;
+.login-seccion-izquierda {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-.card-footer:hover {
-    text-decoration: underline;
+.rotating-image {
+    margin-right: 20px;
+    width: 100px;
+    transition: transform 0.8s ease-in-out;
+}
+
+.rotating-image:hover {
+    transform: rotate(360deg); /* Gira la imagen 360 grados */
 }

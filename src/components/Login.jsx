@@ -1,4 +1,8 @@
-import '../css/General.css'
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import '../css/StylesGeneral.css'
+import PasswordInput from './PasswordInputWithToggle'
+import { BASIC_BTN } from '../css/StylesGeneral';
 
 function Login() {
 
@@ -6,13 +10,27 @@ function Login() {
   return (
     <>
       <div className='fondoLogin'>
+      <div className='login-seccion-izquierda'>
+        <img src='src\assets\images\dollar.png'
+          alt='Imagen de una moneda de dolar'
+          className='rotating-image'
+          style={{mr:'100px'}}/>
+        <h1>Fondo de ahorro</h1>
+      </div>
       <div className="card">
-        <div className="card-title">Título de la Tarjeta</div>
+        <div className="card-title">Bienvenido Miembro</div>
         <div className="card-content">
-          Este es un ejemplo de una tarjeta con estilo. Puedes usar este diseño para
-          mostrar información relevante de forma organizada.
+          <br/>
+          Por favor ingrese su usuario y contraseña
+          <br/>
+          <br/>
+          <TextField fullWidth  id="inputUsuario" 
+            label="Usuario o correo electronico" 
+            variant="outlined" />
+
+          <PasswordInput />
+          <Button sx={BASIC_BTN} variant="outlined">Ingresar</Button>
         </div>
-        <div className="card-footer">Leer más</div>
       </div>
       </div>    
     </>
