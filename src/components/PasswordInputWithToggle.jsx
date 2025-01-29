@@ -1,46 +1,43 @@
-import { useState } from 'react'
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { FormControl, InputLabel,
+  OutlinedInput , InputAdornment, IconButton} from '@mui/material';
 import Visibility from '@mui/icons-material/esm/Visibility';
 import VisibilityOff from '@mui/icons-material/esm/VisibilityOff';
-import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 
-function PasswordInputWithToggle() {
+const PasswordInputWithToggle = ({label}) => {
+
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (event) => {
-    event.preventDefault();
+  const togglePasswordVisibility = () => {
+    setShowPassword((view) => !view);
   };
 
   return (
     <FormControl sx={{width: '100%', mt: '10px'}} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+      <InputLabel htmlFor="password-input">{label}</InputLabel>
       <OutlinedInput
-        id="outlined-adornment-password"
+        id="password-input"
         type={showPassword ? 'text' : 'password'}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
               aria-label={showPassword ? 'Ocultar la contraseña' : 'Mostrar la contraseña'}
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              onMouseUp={handleMouseUpPassword}
-              edge="end"
-            >
+              onClick={togglePasswordVisibility}
+              onMouseDown={(e) => e.preventDefault()}
+              edge="end">
               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={label}
       />
     </FormControl>
   );
 }
+
+PasswordInputWithToggle.propTypes = {
+  label : PropTypes.string.isRequired,
+};
 
 export default PasswordInputWithToggle;

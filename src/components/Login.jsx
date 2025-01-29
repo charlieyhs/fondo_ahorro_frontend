@@ -1,37 +1,57 @@
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import {TextField,Button} from '@mui/material';
 import '../css/StylesGeneral.css'
 import PasswordInput from './PasswordInputWithToggle'
 import { BASIC_BTN } from '../css/StylesGeneral';
+import { useState } from 'react';
+import dollarImg from '../assets/images/dollar.png';
+import { useAuth } from '../hooks/useAuth';
 
-function Login() {
+const Login = () => {
+  
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: ''
+  });
+
+  const { login } = useAuth();
+
+  const submitForm = () => {
+    login('your-token-here');
+  };
 
 
   return (
     <>
       <div className='fondoLogin'>
       <div className='login-seccion-izquierda'>
-        <img src='src\assets\images\dollar.png'
-          alt='Imagen de una moneda de dolar'
-          className='rotating-image'
-          style={{mr:'100px'}}/>
+        <img src={dollarImg}
+          alt='Ilustración de moneda'
+          className='rotating-image'/>
         <h1>Fondo de ahorro</h1>
       </div>
-      <div className="card">
+      <form onSubmit={submitForm} className='card'>
         <div className="card-title">Bienvenido Miembro</div>
         <div className="card-content">
-          <br/>
-          Por favor ingrese su usuario y contraseña
-          <br/>
-          <br/>
-          <TextField fullWidth  id="inputUsuario" 
-            label="Usuario o correo electronico" 
-            variant="outlined" />
+          <p>Por favor ingrese su usuario y contraseña</p>
+          <TextField id="inputUsuario" 
+            fullWidth
+            label="Usuario o correo electronico"
+            value={credentials.username}
+            onChange={(e) => setCredentials({...credentials, username : e.target.value})}
+            sx={{my : 2}}/>
 
-          <PasswordInput />
-          <Button sx={BASIC_BTN} variant="outlined">Ingresar</Button>
+          <PasswordInput 
+            label={"Contraseña"}
+            value={credentials.password}
+            onChange={(e) => setCredentials({...credentials, password : e.target.value})}/>
+
+          <Button 
+            type='submit'
+            sx={BASIC_BTN} variant="contained">Ingresar</Button>
         </div>
-      </div>
+      </form>
+      
+      
       </div>    
     </>
   );
