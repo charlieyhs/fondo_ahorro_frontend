@@ -1,1 +1,0 @@
-export const IMG_DOLLAR = 'src\\assets\\images\\dollar.png';
