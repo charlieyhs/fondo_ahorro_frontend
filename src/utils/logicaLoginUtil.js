@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import apiClient from "./apiClient";
 
 export const validarLogin = (credentials, setErrorUsername, setErrorPassword) => {
     if(!credentials.username){
@@ -16,7 +15,7 @@ export const validarLogin = (credentials, setErrorUsername, setErrorPassword) =>
 
 export const loginUser = async(credentials) => {
     try{
-        const response = await axios.post("http://localhost:8080/login", credentials);
+        const response = await apiClient.post("/login", credentials);
 
         if(response.status === 200){
             const {token} = response.data;
