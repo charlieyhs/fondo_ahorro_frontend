@@ -16,7 +16,7 @@ export const validarLogin = (credentials, setErrorUsername, setErrorPassword) =>
 
 export const loginUser = async(credentials) => {
     try{
-        const response = await axios.post("https://mi_backend.com/login", credentials);
+        const response = await axios.post("http://localhost:8080/login", credentials);
 
         if(response.status === 200){
             const {token} = response.data;

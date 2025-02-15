@@ -4,12 +4,12 @@ import { BASIC_BTN } from '../css/StylesGeneral';
 import { useRef, useState } from 'react';
 import dollarImg from '../assets/images/dollar.svg';
 import { useAuth } from '../hooks/useAuth';
-import PasswordInputWithToggle from './Inputs/PasswordInputWithToggle';
-import InputText from './Inputs/InputText';
+import PasswordInputWithToggle from '../components/Inputs/PasswordInputWithToggle';
+import InputText from '../components/Inputs/InputText';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Mensaje from './Mensajes/Mensaje';
+import Mensaje from '../components/Mensajes/Mensaje';
 import { loginUser, validarLogin } from '../utils/logicaLoginUtil';
-import LoadingBlocker from './Loaders/LoadingBlocker';
+import LoadingBlocker from '../components/Loaders/LoadingBlocker';
 
 const STYLES = {
   input: { width: "100%", my: 1 }
