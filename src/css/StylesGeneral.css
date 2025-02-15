@@ -19,6 +19,7 @@ body {
     margin: 1rem;
     height: min-content;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 .login-seccion-izquierda {
     display: flex;

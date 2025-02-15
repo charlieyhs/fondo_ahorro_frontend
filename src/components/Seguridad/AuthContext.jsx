@@ -4,20 +4,26 @@ import PropTypes from 'prop-types';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [tokenUser, setTokenUser] = useState(null);
 
-  const login = (token) => {
-    localStorage.setItem('authToken', token);
-    setUser({ token });
+  const login = (credentials) => {
+    // cookies HTTPOnly
+    setTokenUser('CHARLIE');
+    localStorage.setItem('authToken', tokenUser);
+  };
+
+  const isAuthenticated = () =>{
+    console.log('CHARLIE');
+    return !!localStorage.getItem('authToken');
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
-    setUser(null);
+    setTokenUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ tokenUser, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

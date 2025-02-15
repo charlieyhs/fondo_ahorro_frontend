@@ -1,0 +1,44 @@
+import { Backdrop, CircularProgress, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+
+function LoadingBlocker({ open, message = "Cargando...", parentRef }) {
+
+    const [container, setContainer] = useState();
+
+    useEffect(() => {
+        if (parentRef?.current) {
+            setContainer(parentRef.current);
+        }
+    }, [parentRef]);
+    
+    if (!open || !container) return null;
+
+    return ReactDOM.createPortal(
+        <Backdrop
+            sx={{
+                color: '#fff',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                borderRadius: 'inherit',
+                gap: 2
+            }}
+            open={open}>
+            <Typography variant="h6">{message}</Typography>
+            <CircularProgress color="inherit" />
+        </Backdrop>, container
+    );
+}
+
+LoadingBlocker.propTypes = {
+    open : PropTypes.bool,
+    message : PropTypes.string,
+    parentRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+}
+
+export default React.memo(LoadingBlocker);

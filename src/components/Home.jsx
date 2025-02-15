@@ -4,10 +4,9 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 1. Eliminar la autenticación del localStorage
-    localStorage.removeItem('isAuthenticated');
-    // 2. Redirigir al usuario a la página de login
+    localStorage.removeItem('authToken');
     navigate('/login');
+    window.location.reload();
   };
 
   return (
