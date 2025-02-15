@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.fondoLogin {
+    display: flex;
+    min-height: 91vh;
+    background: linear-gradient(90deg, #f1f0fe 75%, #dbdcf2 60%);
+    padding: 2rem;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 70vh;
+    margin: 1rem;
+    height: min-content;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+.login-seccion-izquierda {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.rotating-image {
+    width: 120px;
+    height: 120px;
+    transition: transform 0.8s ease-in-out;
+    margin-right: 10px;
+}
+
+.rotating-image:hover {
+    transform: rotate(360deg);
+}
+
+@media (max-width: 768px) {
+    .fondoLogin {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-seccion-izquierda {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+}
