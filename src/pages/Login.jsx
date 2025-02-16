@@ -1,15 +1,17 @@
 import {Button} from '@mui/material';
-import '../css/StylesGeneral.css'
-import { BASIC_BTN } from '../css/StylesGeneral';
+import '../css/General.css'
+import { BASIC_BTN } from '../css/General';
 import { useRef, useState } from 'react';
 import dollarImg from '../assets/images/dollar.svg';
 import { useAuth } from '../hooks/useAuth';
-import PasswordInputWithToggle from './Inputs/PasswordInputWithToggle';
-import InputText from './Inputs/InputText';
+import PasswordInputWithToggle from '../components/Inputs/PasswordInputWithToggle';
+import InputText from '../components/Inputs/InputText';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Mensaje from './Mensajes/Mensaje';
-import { loginUser, validarLogin } from '../utils/logicaLoginUtil';
-import LoadingBlocker from './Loaders/LoadingBlocker';
+import Message from '../components/Messages/Message';
+import { loginUser, validateLogin } from '../utils/logicLoginUtil';
+import LoadingBlocker from '../components/Loaders/LoadingBlocker';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../components/Lists/LanguageSelector';
 
 const STYLES = {
   input: { width: "100%", my: 1 }
@@ -17,6 +19,7 @@ const STYLES = {
 
 const Login = () => {
   
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,9 +41,9 @@ const Login = () => {
   const cerrarMensaje = () => setMostrarMensaje(false);
 
   const submitForm = async(e) => {
-    setLoading(true);
     e.preventDefault();
-    if(!validarLogin(credenciales, setErrorUsername, setErrorPassword)){
+    setLoading(true);
+    if(!validateLogin(credenciales, setErrorUsername, setErrorPassword)){
       setLoading(false);
       return;
     }
@@ -61,33 +64,34 @@ const Login = () => {
 
   return (
     <>
-      <Mensaje open={mensajeLogin} onClose={cerrarMensaje}
+      <Message open={mensajeLogin} onClose={cerrarMensaje}
         severity='warning'>
         {loginError}
-      </Mensaje>
+      </Message>
       <div className='fondoLogin'>
+        <LanguageSelector />
         <div className='login-seccion-izquierda'>
           <img src={dollarImg} loading="lazy"
             alt='Ilustración de dolar'
             className='rotating-image'/>
-          <h1>Fondo de ahorro</h1>
+          <h1>{t('pg_login_title')}</h1>
         </div>
         <div ref={loginRef} className='card'>
           <form onSubmit={submitForm}>
-            <h1>Bienvenido Miembro</h1>
+            <h1>{t('pg_login_welcome')}</h1>
             <div className="card-content">
-              <p>Por favor ingrese su usuario y contraseña</p>
+              <p>{t('pg_lgn_inputUserPass')}</p>
 
               <InputText
                 style={STYLES.input}
-                label="Usuario o correo electronico"
+                label={t('pg_lgn_placeholderUsername')}
                 value={credenciales.username}
                 onChange={ (e) => setCredenciales({...credenciales, username : e.target.value})}
                 error={errorUsername}
                 setError={setErrorUsername}/>
 
               <PasswordInputWithToggle 
-                label={"Contraseña"}
+                label={t('pg_lgn_placeholderPass')}
                 value={credenciales.password}
                 onChange={(e) => setCredenciales({...credenciales, password : e.target.value})}
                 error={errorPassword}
@@ -95,16 +99,14 @@ const Login = () => {
 
               <Button 
                 type='submit'
-                sx={BASIC_BTN} variant="contained">Ingresar</Button>
+                sx={BASIC_BTN} variant="contained">{t('pg_lgn_valueBtnLgn')}</Button>
 
               <LoadingBlocker open={loading} parentRef={loginRef}/>
 
             </div>
           </form>
         </div>
-      
-      
-      </div>    
+      </div>
     </>
   );
 }

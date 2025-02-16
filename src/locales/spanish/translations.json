@@ -1,0 +1,16 @@
+{
+    "pg_login_title": "Fondo de ahorro",
+    "pg_login_welcome": "Bienvenido Miembro",
+    "pg_lgn_inputUserPass" : "Por favor ingrese su usuario y contraseña",
+    "pg_lgn_placeholderUsername": "Usuario o correo electrónico",
+    "pg_lgn_placeholderPass": "Contraseña",
+    "pg_lgn_valueBtnLgn": "Ingresar",
+    "eti_loading": "Cargando...",
+    "eti_required_field": "Este campo es obligatorio",
+    "eti_hidepass": "Ocultar la contraseña",
+    "eti_showpass": "Mostrar la contraseña",
+    "eti_spanish": "Español",
+    "eti_english": "Ingles",
+    "eti_flag": "Bandera",
+    "eti_change_language" : "Cambiar idioma"
+}

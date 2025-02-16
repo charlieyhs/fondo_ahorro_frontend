@@ -15,6 +15,10 @@ dist-ssr
 # Personales
 Mejoras.txt*
 Notas.txt*
+
+# Config
+.env*
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

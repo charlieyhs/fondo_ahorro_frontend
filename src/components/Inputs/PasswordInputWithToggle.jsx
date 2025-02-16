@@ -5,12 +5,13 @@ import { FormControl, InputLabel,
   FormHelperText} from '@mui/material';
 import Visibility from '@mui/icons-material/esm/Visibility';
 import VisibilityOff from '@mui/icons-material/esm/VisibilityOff';
+import { useTranslation } from 'react-i18next';
 
 
 const PasswordInputWithToggle = ({label, value, onChange, error, setError}) => {
   
   const [showPassword, setShowPassword] = useState(false);
-
+  const {t} = useTranslation();
   const togglePasswordVisibility = () => {
     setShowPassword((view) => !view);
   };
@@ -28,7 +29,7 @@ const PasswordInputWithToggle = ({label, value, onChange, error, setError}) => {
         endAdornment={
           <InputAdornment position="end">
             <IconButton
-              aria-label={showPassword ? 'Ocultar la contraseña' : 'Mostrar la contraseña'}
+              aria-label={showPassword ? t('eti_hidepass') : t('eti_showpass')}
               onClick={togglePasswordVisibility}
               onMouseDown={(e) => e.preventDefault()}
               edge="end">
@@ -38,7 +39,7 @@ const PasswordInputWithToggle = ({label, value, onChange, error, setError}) => {
         }
         label={label}
       />
-      {error && <FormHelperText error>Este campo es obligatorio</FormHelperText>}
+      {error && <FormHelperText error>{t('eti_required_field')}</FormHelperText>}
     </FormControl>
   );
 }

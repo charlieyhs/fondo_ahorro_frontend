@@ -1,7 +1,6 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 
-
-export const validarLogin = (credentials, setErrorUsername, setErrorPassword) => {
+export const validateLogin = (credentials, setErrorUsername, setErrorPassword) => {
     if(!credentials.username){
         setErrorUsername(true);
         return false;
@@ -16,7 +15,8 @@ export const validarLogin = (credentials, setErrorUsername, setErrorPassword) =>
 
 export const loginUser = async(credentials) => {
     try{
-        const response = await axios.post("https://mi_backend.com/login", credentials);
+        console.log(apiClient.baseURL);
+        const response = await apiClient.post("/login", credentials);
 
         if(response.status === 200){
             const {token} = response.data;

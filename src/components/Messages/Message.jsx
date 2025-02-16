@@ -2,7 +2,7 @@ import { Alert, Snackbar } from "@mui/material";
 import PropTypes from "prop-types";
 
 
-const Mensaje = ({open=false, severity, children, onClose}) => {
+const Message = ({open=false, severity, children, onClose}) => {
 
     return (
         <Snackbar
@@ -17,11 +17,11 @@ const Mensaje = ({open=false, severity, children, onClose}) => {
     );
 }
 
-Mensaje.propTypes = {
+Message.propTypes = {
     open : PropTypes.bool,
     children : PropTypes.node.isRequired,
     onClose : PropTypes.func.isRequired,
     severity : PropTypes.string.isRequired
 };
 
-export default Mensaje;
+export default Message;

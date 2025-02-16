@@ -2,10 +2,13 @@ import { Backdrop, CircularProgress, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next";
 
-function LoadingBlocker({ open, message = "Cargando...", parentRef }) {
+function LoadingBlocker({ open, message = "eti_loading", parentRef }) {
 
     const [container, setContainer] = useState();
+
+    const {t} = useTranslation();
 
     useEffect(() => {
         if (parentRef?.current) {
@@ -29,7 +32,7 @@ function LoadingBlocker({ open, message = "Cargando...", parentRef }) {
                 gap: 2
             }}
             open={open}>
-            <Typography variant="h6">{message}</Typography>
+            <Typography variant="h6">{t(message)}</Typography>
             <CircularProgress color="inherit" />
         </Backdrop>, container
     );
