@@ -1,10 +1,13 @@
 import { TextField } from "@mui/material";
 import PropTypes from "prop-types";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 
 const InputText = ({label, value, onChange, style, error, setError}) => {
     
+    const {t} = useTranslation();
+
     const handleChange = useCallback((e) => {
             onChange(e);
             if(error) setError(false);
@@ -18,7 +21,7 @@ const InputText = ({label, value, onChange, style, error, setError}) => {
             color="success"
             label={label}
             error={error}
-            helperText={error ? "Este campo es obligatorio" : ""}
+            helperText={error ? t('eti_required_field') : ""}
             value={value}
             onFocus={() => error && setError(false)}
             onChange={handleChange}

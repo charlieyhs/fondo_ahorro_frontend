@@ -1,0 +1,16 @@
+{
+    "pg_login_title": "Savings fund",
+    "pg_login_welcome": "Welcome Member",
+    "pg_lgn_inputUserPass": "Please enter your username and password",
+    "pg_lgn_placeholderUsername": "Username or email",
+    "pg_lgn_placeholderPass": "Password",
+    "pg_lgn_valueBtnLgn": "Login",
+    "eti_loading": "Loading...",
+    "eti_required_field": "This field is obligatory",
+    "eti_hidepass": "Hide the password",
+    "eti_showpass": "show the password",
+    "eti_spanish": "Spanish",
+    "eti_english": "English",
+    "eti_flag": "Flag",
+    "eti_change_language" : "Change language"
+}
