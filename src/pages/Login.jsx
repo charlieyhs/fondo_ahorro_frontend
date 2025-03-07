@@ -35,10 +35,10 @@ const Login = () => {
   const [errorUsername, setErrorUsername] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
-  const [mensajeLogin, setMostrarMensaje] = useState(false);
+  const [mensajeLogin, setMensajeLogin] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const cerrarMensaje = () => setMostrarMensaje(false);
+  const cerrarMensaje = () => setMensajeLogin(false);
 
   const submitForm = async(e) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ const Login = () => {
       navigate(from, { replace:true });
     } else {
       setLoginError(response.message);
-      setMostrarMensaje(true);
+      setMensajeLogin(true);
     }
     setLoading(false);
   };
