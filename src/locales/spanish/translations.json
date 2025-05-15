@@ -12,5 +12,18 @@
     "eti_spanish": "Español",
     "eti_english": "Ingles",
     "eti_flag": "Bandera",
-    "eti_change_language" : "Cambiar idioma"
+    "eti_change_language" : "Cambiar idioma",
+    "pg_role_selection_title" : "Selecciona tu rol",
+    "footer.powered_by" : "Desarrollador por:",
+    "eti_desc_role_admin" : "Acceso completo al sistema",
+    "eti_desc_role_treasurer" : "Gestión de pagos y finanzas",
+    "eti_desc_role_member" : "Acceso básico al sistema",
+    "eti_name_admin" : "Administrador",
+    "eti_name_treasurer" : "Tesorero",
+    "eti_name_member" : "Miembro",
+    "eti_role_selection" : "Selecciona un rol",
+    "eti_continue_as_" : "Continuar como...",
+    "eti_continue_as_MEMBER" : "Continuar como Miembro",
+    "eti_continue_as_ADMIN" : "Continuar como Administrador",
+    "eti_continue_as_TREASURER" : "Continuar como Tesorero"
 }

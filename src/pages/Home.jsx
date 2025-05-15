@@ -1,16 +1,21 @@
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import LoadingBlocker from '../components/Loaders/LoadingBlocker';
+import { useRef, useState } from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
+  const { logout } = useAuth();
+  const handleLogout = async () => {
+    setLoading(true);
+    await logout();
     navigate('/login');
-    window.location.reload();
   };
+  const [loading, setLoading] = useState(false);
+  const loadingRef = useRef(null);
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} ref={loadingRef}>
       <h1>Bienvenido al Fondo de Ahorro</h1>
       <p>Aquí puedes ver el estado de tus ahorros.</p>
       
@@ -18,6 +23,9 @@ const Home = () => {
       <button onClick={handleLogout} style={styles.button}>
         Cerrar sesión
       </button>
+
+      <LoadingBlocker open={loading} parentRef={loadingRef}/>
+
     </div>
   );
 };

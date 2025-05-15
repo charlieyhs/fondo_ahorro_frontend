@@ -33,7 +33,6 @@ InputText.propTypes = {
     label : PropTypes.string.isRequired,
     value : PropTypes.string.isRequired,
     onChange : PropTypes.func,
-    fullWidth : PropTypes.bool,
     error : PropTypes.bool,
     setError : PropTypes.func,
     style : PropTypes.object

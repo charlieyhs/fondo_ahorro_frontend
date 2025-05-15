@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 export const validateLogin = (credentials, setErrorUsername, setErrorPassword) => {
-    if(!credentials.login){
+    if(!credentials.username){
         setErrorUsername(true);
         return false;
     }else if(!credentials.password){
@@ -15,21 +15,27 @@ export const validateLogin = (credentials, setErrorUsername, setErrorPassword) =
 
 export const loginUser = async(credentials) => {
     try{
-        const response = await apiClient.post("/auth/login", credentials);
+        const {data} = await apiClient.post("/auth/login", credentials);
 
-        if(response.status === 200){
-            const {token} = response.data;
-            localStorage.setItem("authToken", token);
-            return {success: true, token};
-        }else {
-            return {success: false, message: "Credenciales incorrectas"};
+        if(data.success) {
+            return {
+                success : true,
+                accessToken : data.data.accessToken || data.data.accessSelectRole,
+                refreshToken : data.data.refreshToken,
+                roles : data.data.roles || []
+            }
         }
+        
+        return {
+            success: false, 
+            message: "Credenciales incorrectas"
+        };
+        
 
     }catch(error){
         let message = "Error conectando con el servidor";
         if(error.response){
-            const {data} = error.response;
-            message = data ? Object.keys(data).map(field => `${data[field]}`).join(",") : "Error en la solicitud";
+            message = error.response.data.message;
         }else if(error.request){
             message = "No se recibió respuesta del servidor";
         }
