@@ -5,10 +5,11 @@ import apiClient from "../utils/apiClient";
 
 export const AuthProvider = ({ children }) => {
 
-    const [tokens, setTokens] = useState({
-      accessToken: null,
-      refreshToken: null,
-    });
+    const [tokens, setTokens] = useState(() => ({
+      accessToken: sessionStorage.getItem('accessToken'),
+      refreshToken: sessionStorage.getItem('refreshToken')
+    }));
+
     
     useEffect(() => {
       // Adjuntar access token
@@ -28,12 +29,14 @@ export const AuthProvider = ({ children }) => {
 
           const refreshToken = sessionStorage.getItem('refreshToken');
 
-          if(error.response?.status === 401 && refreshToken && !orig._retry){
+          if(
+              error.response?.status === 401 
+              && refreshToken 
+              && !orig._retry
+              && !orig.url.includes('/auth/refresh-token') ){
             orig._retry = true;
             try{
-              const { data } = await apiClient.post('/auth/refresh', null, {
-                params : [refreshToken]
-              });
+              const { data } = await apiClient.post('/auth/refresh-token', {refreshToken});
               
               const { accessToken, refreshToken: newRefresh } = data.data;
 
@@ -47,6 +50,9 @@ export const AuthProvider = ({ children }) => {
               orig.headers['Authorization'] = `Bearer ${data.data.accessToken}`;
               return apiClient(orig);
             }catch(refreshError){
+              sessionStorage.removeItem('accessToken');
+              sessionStorage.removeItem('refreshToken');
+              window.location.href = '/login';
               return Promise.reject(refreshError);
             }
           }
@@ -58,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         apiClient.interceptors.response.eject(responseInterceptor);
       }
     },[]);
-
+    
     
     const login = useCallback(({accessToken, refreshToken, provisional = false}) => {
       if(provisional){

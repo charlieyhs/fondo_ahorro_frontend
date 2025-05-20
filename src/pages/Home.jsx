@@ -9,6 +9,7 @@ const Home = () => {
   const handleLogout = async () => {
     setLoading(true);
     await logout();
+    setLoading(false);
     navigate('/login');
   };
   const [loading, setLoading] = useState(false);
