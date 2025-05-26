@@ -71,8 +71,7 @@ const Login = () => {
         });
       }else{
         login({
-          accessToken : response.accessToken,
-          refreshToken : response.refreshToken
+          accessToken : response.accessToken
         });
         const from = location.state?.from?.pathname || '/home';
         navigate(from, { replace:true });

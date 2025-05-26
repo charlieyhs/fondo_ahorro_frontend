@@ -12,7 +12,6 @@ const App = () => {
       <GeneralLayout>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/select-role" element={<RoleSelectionPage/>} />
           
           {/*Rutas protegidas */ }
           <Route path="/home" element={

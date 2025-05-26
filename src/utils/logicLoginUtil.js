@@ -21,14 +21,13 @@ export const loginUser = async(credentials) => {
             return {
                 success : true,
                 accessToken : data.data.accessToken || data.data.accessSelectRole,
-                refreshToken : data.data.refreshToken,
                 roles : data.data.roles || []
             }
         }
         
         return {
             success: false, 
-            message: "Credenciales incorrectas"
+            message: data.message || "Credenciales incorrectas"
         };
         
 
