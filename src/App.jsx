@@ -5,13 +5,18 @@ import PrivateRoute from './components/Seguridad/PrivateRoute';
 import RoleSelectionPage from './pages/RoleSelectionPage';
 import { LanguageProvider } from './providers/LanguageProvider';
 import GeneralLayout from './Layout/GeneralLayout';
+import { AuthProvider } from './providers/AuthProvider';
 
 const App = () => {
   return (
     <LanguageProvider>
       <GeneralLayout>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={
+            <AuthProvider>
+              <Login />
+            </AuthProvider>
+          }/>
           
           {/*Rutas protegidas */ }
           <Route path="/home" element={

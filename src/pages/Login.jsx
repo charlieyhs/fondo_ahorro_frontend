@@ -23,7 +23,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {login} = useAuth();
+  const {login, loginProvisional} = useAuth();
 
   const loginRef = useRef(null);
 
@@ -58,10 +58,7 @@ const Login = () => {
 
       if(roles.length > 1){
         sessionStorage.setItem('fromLogin', 'true');
-        login({
-          accessToken : response.accessToken,
-          provisional : true
-        });
+        loginProvisional(response.accessToken);
         navigate('/select-role', { 
           state: { 
             roles: roles,
@@ -70,9 +67,7 @@ const Login = () => {
           replace: true
         });
       }else{
-        login({
-          accessToken : response.accessToken
-        });
+        login(response.accessToken);
         const from = location.state?.from?.pathname || '/home';
         navigate(from, { replace:true });
       }

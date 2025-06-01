@@ -66,11 +66,11 @@ const RoleSelectionPage = () => {
             const res = await apiClient.post('/auth/change-active-role', null, {
                 params : {newRole : selectedRole}
             });
-            const {accessToken, refreshToken} = res.data.data;
-            if(!accessToken || !refreshToken){
+            const {accessToken} = res.data.data;
+            if(!accessToken){
                 throw new Error("No han llegado los datos necesarios.");
             }
-            applySelectedRole({accessToken, refreshToken});
+            applySelectedRole({accessToken});
     
             const from = location.state?.from?.pathname || '/home';
     

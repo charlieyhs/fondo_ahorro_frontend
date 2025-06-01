@@ -1,4 +1,4 @@
-import apiClient from "./apiClient";
+import authClient from "./authClient";
 
 export const validateLogin = (credentials, setErrorUsername, setErrorPassword) => {
     if(!credentials.username){
@@ -15,7 +15,7 @@ export const validateLogin = (credentials, setErrorUsername, setErrorPassword) =
 
 export const loginUser = async(credentials) => {
     try{
-        const {data} = await apiClient.post("/auth/login", credentials);
+        const {data} = await authClient.post("/auth/login", credentials);
 
         if(data.success) {
             return {
