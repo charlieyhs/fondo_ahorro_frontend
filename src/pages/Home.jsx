@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import LoadingBlocker from '../components/Loaders/LoadingBlocker';
 import { useRef, useState } from 'react';
+import Sidebar from '../components/menus/Sidebar';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,18 +17,22 @@ const Home = () => {
   const loadingRef = useRef(null);
 
   return (
-    <div style={styles.container} ref={loadingRef}>
-      <h1>Bienvenido al Fondo de Ahorro</h1>
-      <p>Aquí puedes ver el estado de tus ahorros.</p>
+    <>
       
-      {/* Botón de cerrar sesión */}
-      <button onClick={handleLogout} style={styles.button}>
-        Cerrar sesión
-      </button>
+      <Sidebar />
+      <div style={styles.container} ref={loadingRef}>
+        <h1>Bienvenido al Fondo de Ahorro</h1>
+        <p>Aquí puedes ver el estado de tus ahorros.</p>
+        
+        {/* Botón de cerrar sesión */}
+        <button onClick={handleLogout} style={styles.button}>
+          Cerrar sesión
+        </button>
 
-      <LoadingBlocker open={loading} parentRef={loadingRef}/>
+        <LoadingBlocker open={loading} parentRef={loadingRef}/>
 
-    </div>
+      </div>
+    </>
   );
 };
 

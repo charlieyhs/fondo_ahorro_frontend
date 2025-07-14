@@ -5,25 +5,40 @@ import PrivateRoute from './components/Seguridad/PrivateRoute';
 import RoleSelectionPage from './pages/RoleSelectionPage';
 import { LanguageProvider } from './providers/LanguageProvider';
 import GeneralLayout from './Layout/GeneralLayout';
-import { AuthProvider } from './providers/AuthProvider';
+import { AuthProvider } from './providers/LoginProvider';
+import { useAuth } from './hooks/useAuth';
+import { UserProvider } from './providers/UserProvider';
 
 const App = () => {
+
+  const { isAuthenticated } = useAuth();
+
+
   return (
     <LanguageProvider>
       <GeneralLayout>
         <Routes>
+          <Route path="/" element={
+              isAuthenticated()
+                ? <Navigate to="/home" replace />
+                : <Navigate to="/login" replace />
+            }
+          />
           <Route path="/login" element={
             <AuthProvider>
               <Login />
             </AuthProvider>
           }/>
           
-          {/*Rutas protegidas */ }
+          {/*Rutas con usuario */ }
           <Route path="/home" element={
             <PrivateRoute>
-              <Home/>
+              <UserProvider>
+                <Home />
+              </UserProvider>
             </PrivateRoute>
           }/>
+
           <Route path="/select-role" element={
             <PrivateRoute>
               <RoleSelectionPage />

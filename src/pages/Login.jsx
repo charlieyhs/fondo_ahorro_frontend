@@ -11,6 +11,7 @@ import Message from '../components/Messages/Message';
 import { loginUser, validateLogin } from '../utils/logicLoginUtil';
 import LoadingBlocker from '../components/Loaders/LoadingBlocker';
 import { useTranslation } from 'react-i18next';
+import { FROM_LOGIN } from '../constants/storageKeys';
 
 
 const STYLES = {
@@ -57,7 +58,7 @@ const Login = () => {
       const roles = response.roles || [];
 
       if(roles.length > 1){
-        sessionStorage.setItem('fromLogin', 'true');
+        sessionStorage.setItem(FROM_LOGIN, 'true');
         loginProvisional(response.accessToken);
         navigate('/select-role', { 
           state: { 

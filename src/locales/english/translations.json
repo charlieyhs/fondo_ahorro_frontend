@@ -25,5 +25,7 @@
     "eti_continue_as_" : "Continue as...",
     "eti_continue_as_MEMBER" : "Continue as Member",
     "eti_continue_as_ADMIN" : "Continue as Administrator",
-    "eti_continue_as_TREASURER" : "Continue as Treasurer"
+    "eti_continue_as_TREASURER" : "Continue as Treasurer",
+    "eti_flag_Spanish": "Spanish language flag",
+    "eti_flag_English": "English language flag"
 }

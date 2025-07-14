@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import LoadingBlocker from "../components/Loaders/LoadingBlocker";
 import RoleSelector from "../components/data/RoleSelector";
-import apiClient from "../utils/apiClient";
+import apiClient from "../clients/apiClient";
 import Message from "../components/Messages/Message";
+import { ACCESS_ROLE, ACCESS_ROLE_EXPIRY, FROM_LOGIN } from "../constants/storageKeys";
 
 const RoleSelectionPage = () => {
 
@@ -19,9 +20,10 @@ const RoleSelectionPage = () => {
 
     useEffect(()=> {
         const handleUnload = () => {
-            sessionStorage.removeItem('accessSelectRole');
-            sessionStorage.removeItem('accessSelectRole_expiry');
-            sessionStorage.removeItem('fromLogin');
+            console.log('>> beforeunload triggered');
+            sessionStorage.removeItem(ACCESS_ROLE);
+            sessionStorage.removeItem(ACCESS_ROLE_EXPIRY);
+            sessionStorage.removeItem(FROM_LOGIN);
         }
         window.addEventListener('beforeunload', handleUnload);
         return () => window.removeEventListener('beforeunload', handleUnload);
@@ -30,15 +32,15 @@ const RoleSelectionPage = () => {
     useEffect(() => {
         // Obtener los roles desde el estado de navegación
         const navigationState = location.state;
-        const fromLogin = sessionStorage.getItem('fromLogin');
+        const fromLogin = sessionStorage.getItem(FROM_LOGIN);
 
         if(!navigationState?.roles || !fromLogin){
-            sessionStorage.removeItem('accessSelectRole');
-            sessionStorage.removeItem('accessSelectRole_expiry');
+            sessionStorage.removeItem(ACCESS_ROLE);
+            sessionStorage.removeItem(ACCESS_ROLE_EXPIRY);
             navigate('login', { replace:true });
             return;
         }
-        sessionStorage.removeItem('fromLogin');
+        sessionStorage.removeItem(FROM_LOGIN);
         setAvailableRoles(navigationState.roles);
         setLoading(false);
 
@@ -48,14 +50,14 @@ const RoleSelectionPage = () => {
 
     const handleRoleSelect = async (selectedRole) => {
         setLoading(true);
-        const accessSelectRole = sessionStorage.getItem('accessSelectRole');
+        const accessSelectRole = sessionStorage.getItem(ACCESS_ROLE);
         if(accessSelectRole){
-          const accessToken = sessionStorage.getItem('accessSelectRole');
-          const expiry = parseInt(sessionStorage.getItem('accessSelectRole_expiry'), 10);
+          const accessToken = sessionStorage.getItem(ACCESS_ROLE);
+          const expiry = parseInt(sessionStorage.getItem(ACCESS_ROLE_EXPIRY), 10);
           const isTokenExpired = !accessToken || !expiry || Date.now() > expiry;
           if(isTokenExpired){
-            sessionStorage.removeItem('accessSelectRole');
-            sessionStorage.removeItem('accessSelectRole_expiry');
+            sessionStorage.removeItem(ACCESS_ROLE);
+            sessionStorage.removeItem(ACCESS_ROLE_EXPIRY);
             navigate('login', { replace:true });
             return;
           }
