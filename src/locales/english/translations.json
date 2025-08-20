@@ -27,5 +27,12 @@
     "eti_continue_as_ADMIN" : "Continue as Administrator",
     "eti_continue_as_TREASURER" : "Continue as Treasurer",
     "eti_flag_Spanish": "Spanish language flag",
-    "eti_flag_English": "English language flag"
+    "eti_flag_English": "English language flag",
+    "pag_home": "Home",
+    "pag_members": "Members",
+    "logout": "Logout",
+    "eti_name": "Name",
+    "eti_age": "Age",
+    "eti_lastname": "Last name",
+    "eti_startdate": "Start date"
 }

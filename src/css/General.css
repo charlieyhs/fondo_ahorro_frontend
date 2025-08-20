@@ -3,70 +3,88 @@ body {
     overflow-x: hidden;
 }
 
-html, body {
+html, body, #root {
     height: 100%;
     margin: 0;
     padding: 0;
 }
 
-.loginDatos{
-    display: flex;
-    min-height: 91vh;
-    justify-content: space-evenly;
-    align-items: center;
+.loginDatos {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-height: 550px;
 }
+
 .fondoLogin {
-    padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f1f0fe;
 }
 
 .card {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    max-width: 70vh;
-    margin: 1rem;
-    height: min-content;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-}
-.login-seccion-izquierda {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.card h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: 600;
+}
+
+.card-content {
+  width: 100%;
+}
+.card-content p {
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.login-seccion-izquierda {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px;
+  color: white;
+  text-align: center;
+}
+
+.login-seccion-izquierda h1 {
+  font-size: 28px;
+  margin-top: 30px;
+  font-weight: 600;
 }
 
 .rotating-image {
     width: 120px;
-    height: 120px;
-    transition: transform 0.8s ease-in-out;
-    margin-right: 10px;
+    height: auto;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
 }
 
 .rotating-image:hover {
     transform: rotate(360deg);
-}
-
-@media (max-width: 768px) {
-    .fondoLogin {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .login-seccion-izquierda {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    footer {
-        padding: 1rem;
-    }
-    main {
-        padding: 1rem;
-    }
 }
 
 .containerStyles {
@@ -85,11 +103,11 @@ html, body {
     transform: scale(1.2);
 }
 footer {
-    background-color: #f1f0fe;
+    background-color: #fff;
     color: #000000;
     padding: 0.5rem;
     margin-top: auto; /* Para que se mantenga abajo */
-    border-top: 3px solid #68bb70;
+    border-top: 3px solid #696ceb;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -106,8 +124,8 @@ footer h2:hover {
     transition: color 0.3s ease;
 }
 .layout-container {
-    background: #f1f0fe;
-    min-height: 100vh;
+    background: #fff;
+    height: 100%;
     display: flex;
     flex-direction: column;
     border-radius: 8px;
@@ -123,4 +141,122 @@ main {
     align-items: center;
     height: 100%;
 }
+
+.btnLogin{
+    width: 100%;
+    padding: 12px 0 !important;
+    font-size: 16px !important;
+    margin-top: 15px !important;
+    background: #696ceb !important;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 900px) {
+  .loginDatos {
+    flex-direction: column;
+    max-width: 500px;
+  }
   
+  .login-seccion-izquierda {
+    padding: 30px;
+    order: 1;
+  }
+  
+  .login-seccion-izquierda h1 {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  
+  .rotating-image {
+    width: 120px;
+  }
+  
+  .card {
+    padding: 30px;
+    order: 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .fondoLogin {
+    padding: 15px;
+  }
+  
+  .loginDatos {
+    border-radius: 8px;
+  }
+  
+  .login-seccion-izquierda {
+    padding: 25px 20px;
+  }
+  
+  .login-seccion-izquierda h1 {
+    font-size: 20px;
+  }
+  
+  .card {
+    padding: 25px 20px;
+  }
+  
+  .card h1 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-seccion-izquierda {
+    padding: 20px 15px;
+  }
+  
+  .card {
+    padding: 20px 15px;
+  }
+  
+  .rotating-image {
+    width: 100px;
+  }
+}
+
+/* Mejoras para inputs en dispositivos móviles */
+@media (max-width: 480px) {
+  .card-content p {
+    font-size: 14px;
+  }
+  
+  /* Asegurar que los inputs sean fáciles de tocar en móviles */
+  .MuiFormControl-root {
+    min-height: 70px;
+  }
+  
+  .MuiButton-root {
+    padding: 12px !important;
+    font-size: 16px !important;
+  }
+  .btnLogin {
+    padding: 14px 0 !important;
+  }
+}
+
+/* Estilos para modo landscape en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .fondoLogin {
+    padding: 10px;
+  }
+  
+  .loginDatos {
+    min-height: auto;
+    max-width: 700px;
+  }
+  
+  .login-seccion-izquierda {
+    padding: 20px;
+  }
+  
+  .rotating-image {
+    width: 80px;
+  }
+  
+  .card {
+    padding: 20px;
+  }
+}

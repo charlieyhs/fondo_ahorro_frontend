@@ -8,6 +8,7 @@ import GeneralLayout from './Layout/GeneralLayout';
 import { AuthProvider } from './providers/LoginProvider';
 import { useAuth } from './hooks/useAuth';
 import { UserProvider } from './providers/UserProvider';
+import Members from './pages/Members';
 
 const App = () => {
 
@@ -35,6 +36,14 @@ const App = () => {
             <PrivateRoute>
               <UserProvider>
                 <Home />
+              </UserProvider>
+            </PrivateRoute>
+          }/>
+
+          <Route path="/members" element={
+            <PrivateRoute>
+              <UserProvider>
+                <Members />
               </UserProvider>
             </PrivateRoute>
           }/>

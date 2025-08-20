@@ -27,5 +27,12 @@
     "eti_continue_as_ADMIN" : "Continuar como Administrador",
     "eti_continue_as_TREASURER" : "Continuar como Tesorero",
     "eti_flag_Español": "Bandera de idioma español",
-    "eti_flag_Ingles": "Bandera de idioma Ingles"
+    "eti_flag_Ingles": "Bandera de idioma Ingles",
+    "pag_home": "Inicio",
+    "pag_members": "Miembros",
+    "logout": "Salir",
+    "eti_name": "Nombre",
+    "eti_age": "Edad",
+    "eti_lastname": "Apellido",
+    "eti_startdate": "Fecha de inicio"
 }

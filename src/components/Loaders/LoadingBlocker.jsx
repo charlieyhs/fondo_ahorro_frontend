@@ -18,19 +18,27 @@ function LoadingBlocker({ open, message = "eti_loading", parentRef }) {
     
     if (!open || !container) return null;
 
+    const baseSx = {
+        color: '#fff',
+        top: 0,
+        left: 0,
+        borderRadius: 'inherit',
+        gap: 2,
+    };
+
+    const sx = {
+        ...baseSx,
+        position: parentRef ? 'absolute' : 'fixed',
+        width: parentRef ? '100%' : '100vw',
+        height: parentRef ? '100%' : '100vh',
+        zIndex: (theme) =>
+            parentRef ? theme.zIndex.drawer + 1 : theme.zIndex.modal + 1,
+    };
+
+
     return ReactDOM.createPortal(
         <Backdrop
-            sx={{
-                color: '#fff',
-                zIndex: (theme) => theme.zIndex.drawer + 1,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                borderRadius: 'inherit',
-                gap: 2
-            }}
+            sx={sx}
             open={open}>
             <Typography variant="h6">{t(message)}</Typography>
             <CircularProgress color="inherit" />

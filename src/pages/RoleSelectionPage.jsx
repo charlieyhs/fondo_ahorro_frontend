@@ -87,9 +87,12 @@ const RoleSelectionPage = () => {
     
     return (
         <div className='role-selection-page' ref={loadingRef}>
-            <Message open={!!mensajeError} onClose={cerrarMensaje} severity="error">
-                {mensajeError}
-            </Message>
+            {mensajeError && (
+                <Message open onClose={cerrarMensaje} severity="error">
+                    {mensajeError}
+                </Message>
+            )}
+            
 
             <RoleSelector
                 roles={availableRoles}

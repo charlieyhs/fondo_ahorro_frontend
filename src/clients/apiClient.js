@@ -16,26 +16,40 @@ apiClient.interceptors.request.use(config => {
     return config;
 });
 
+let refreshTokenPromise = null;
+
 // Renovar en status 401
 apiClient.interceptors.response.use(
 res => res,
 async error => {
-    const orig = error.config;
+    const originalRequest  = error.config;
     if(error.response?.status === 401
-        && !orig._retry
-        && !orig.url.includes('/auth/refresh-token') ){
-    orig._retry = true;
+        && !originalRequest._retry
+        && !originalRequest.url.includes('/auth/refresh-token') ){
+        originalRequest._retry = true;
+        if(!refreshTokenPromise){
+            refreshTokenPromise = (async () =>{
+                try{
+                    const { data } = await apiClient.post('/auth/refresh-token', {});
+                    
+                    const { accessToken } = data.data;
+                    sessionStorage.setItem(ACCESS_TOKEN, accessToken);
+                    return accessToken;
+    
+                }catch(refreshError){
+                    sessionStorage.removeItem(ACCESS_TOKEN);
+                    window.location.href = '/login';
+                    throw refreshError;
+                }finally{
+                    refreshTokenPromise = null;
+                }
+            })();
+        }
         try{
-            const { data } = await apiClient.post('/auth/refresh-token', {});
-            
-            const { accessToken } = data.data;
-            sessionStorage.setItem(ACCESS_TOKEN, accessToken);
-
-            orig.headers['Authorization'] = `Bearer ${data.data.accessToken}`;
-            return apiClient(orig);
+            const newToken = await refreshTokenPromise;   
+            originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+            return apiClient(originalRequest);
         }catch(refreshError){
-            sessionStorage.removeItem(ACCESS_TOKEN);
-            window.location.href = '/login';
             return Promise.reject(refreshError);
         }
     }

@@ -1,6 +1,5 @@
 import {Button} from '@mui/material';
 import '../css/General.css'
-import { BASIC_BTN } from '../css/General';
 import { useRef, useState } from 'react';
 import dollarImg from '../assets/images/dollar.svg';
 import { useAuth } from '../hooks/useAuth';
@@ -118,7 +117,7 @@ const Login = () => {
 
                 <Button 
                   type='submit'
-                  sx={BASIC_BTN} variant="contained">{t('pg_lgn_valueBtnLgn')}</Button>
+                  className='btnLogin' variant="contained">{t('pg_lgn_valueBtnLgn')}</Button>
 
                 <LoadingBlocker open={loading} parentRef={loginRef}/>
 

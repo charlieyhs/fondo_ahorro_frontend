@@ -8,8 +8,9 @@ import {
   Typography,
   Avatar,
   useTheme,
-  Grid2
+  Grid
 } from '@mui/material';
+
 import {
   AdminPanelSettings as AdminIcon,
   AccountBalance as TreasurerIcon,
@@ -51,12 +52,12 @@ const RoleSelector = ({ roles, onRoleSelect }) => {
         {t('eti_role_selection')}
       </Typography>
       
-      <Grid2 container spacing={3} justifyContent='center' component='section'>
+      <Grid container spacing={3} justifyContent='center' component='section'>
         {roles.map((role) => {
           const details = roleDetails[role.toLowerCase()] || {};
           const isSelected = selectedRole === role;
           return (
-            <Grid2 item xs={12} sm={6} md={4} key={role}>
+            <Grid size={{xs: 12, sm: 6, md:5}} key={role}>
               <Card
                 component='article'
                 onClick={() => setSelectedRole(role)}
@@ -89,10 +90,10 @@ const RoleSelector = ({ roles, onRoleSelect }) => {
                   </Typography>
                 </CardContent>
               </Card>
-            </Grid2>
+            </Grid>
           );
         })}
-      </Grid2>
+      </Grid>
 
       <Box sx={{ mt: 4, textAlign: 'center' }}>
         <Button
