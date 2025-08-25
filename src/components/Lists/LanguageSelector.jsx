@@ -8,15 +8,32 @@ import '../../css/General.css'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const LanguageSelector = () => {
+    const colorPurple = "#696ceb";
     const {t, i18n} = useTranslation();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    // Mostrar el componente unicamente despues de que se ejecute el useEffect
+    const [showComponent, setShowComponent] = useState(false);
+
+    const setLanguage = useCallback(async (lng, callback) => {
+        try {
+            await i18n.changeLanguage(lng);
+            document.body.dir = i18n.dir(lng);
+            localStorage.setItem('selectedLanguage', lng);
+            if (typeof callback === 'function') {
+                callback();
+            }
+        } catch (error) {
+            console.error('Error when changing the language:', error);
+        }
+    }, [i18n]);
+
 
     useEffect(()=>{
         const savedLanguage = localStorage.getItem('selectedLanguage') || 'es';
-        i18n.changeLanguage(savedLanguage);
-        document.body.dir = savedLanguage;
-    },[i18n]);
+        setLanguage(savedLanguage, () => setShowComponent(true));
+    },[setLanguage]);
+
 
     const languages = useMemo(() => [
         {code : 'es', name: t('eti_spanish'), flag: ESFlag},
@@ -25,17 +42,14 @@ const LanguageSelector = () => {
 
     const currentLanguage = useMemo(() => 
         languages.find(lng => lng.code === i18n.language)
-        ,[i18n.language, languages]);
+        ,[i18n.language, languages]
+    );
 
     const handleChangeLanguage = useCallback((lng) => {
-        i18n.changeLanguage(lng);
-        localStorage.setItem('selectedLanguage', lng);
+        setLanguage(lng, () => setAnchorEl(null));
+    },[setLanguage]);
 
-        const direction = i18n.dir(lng);
-        document.body.dir = direction;
-
-        setAnchorEl(null);
-    },[i18n]);
+    if(!showComponent) return null;
 
     return(
         <div className='containerStyles'>
@@ -54,10 +68,10 @@ const LanguageSelector = () => {
                     alignItems: 'center',
                     gap: 1,
                     transition: 'all 0.3s ease',
-                    borderColor: '#696ceb',
+                    borderColor: colorPurple,
                     '&:hover': { 
                         backgroundColor: '#f0f0f0',
-                        borderColor: '#696ceb'
+                        borderColor: colorPurple
                     }
                 }}
                 startIcon={
@@ -66,15 +80,19 @@ const LanguageSelector = () => {
                         alt={`${currentLanguage.name}`} 
                         title={`${currentLanguage.name}`}
                         className='flagStyles'/>
-                }
-            >
-                <span style={{color:'#696ceb'}}>{i18n.language}</span>
-                {open ? <ArrowUp sx={{color:'#696ceb'}}/> : <ArrowDown sx={{color:'#696ceb'}}/>}
+                }>
+                <span style={{color:colorPurple}}>{i18n.language}</span>
+                {open ? <ArrowUp sx={{color:colorPurple}}/> : <ArrowDown sx={{color:colorPurple}}/>}
             </Button>
             <Menu
                 anchorEl={anchorEl}
                 open={open}
-                TransitionComponent={Fade}
+                slots={{
+                    transition: Fade
+                }}
+                slotProps={{
+                    list : {sx:{py: 0, minWidth: 150}}
+                }}
                 transitionDuration={200}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -85,12 +103,6 @@ const LanguageSelector = () => {
                     horizontal: 'right',
                 }}
                 onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                    sx: {
-                        py: 0,
-                        minWidth: 150
-                    }
-                }}
             >
                 {languages.map((lang) => (
                     <MenuItem
@@ -110,8 +122,8 @@ const LanguageSelector = () => {
                             height: 20
                          }}>
                             <LazyLoadImage src={lang.flag} 
-                                alt={`${lang.name} ${t('eti_flag')}`}
-                                title={`${lang.name} ${t('eti_flag')}`}
+                                alt={`${t('eti_flag_'+lang.name)}`}
+                                title={`${t('eti_flag_'+lang.name)}`}
                                 width={20}
                                 height={15}
                                 effect="opacity"/>

@@ -1,6 +1,3 @@
-export const BASIC_BTN = {
-    backgroundColor: '#696ceb',
-    color: 'white',
-    width: '100%',
-    mt: '10px'
-  };
+export const PRINCIPAL_COLOR = "#696ceb"
+export const GREEN_COLOR = "#4CAF50"
+export const SELECTED_COLOR_OPTION = "#696beb40"

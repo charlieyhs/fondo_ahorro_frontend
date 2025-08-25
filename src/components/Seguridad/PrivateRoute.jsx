@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 const PrivateRoute = ({children}) => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
-  return isAuthenticated ? (children) : (
+  return isAuthenticated() ? (children) : (
     <Navigate to="/login" state={{from : location}} replace />
   )
 };

@@ -19,7 +19,7 @@ const Message = ({open=false, severity, children, onClose}) => {
 
 Message.propTypes = {
     open : PropTypes.bool,
-    children : PropTypes.node.isRequired,
+    children : PropTypes.node,
     onClose : PropTypes.func.isRequired,
     severity : PropTypes.string.isRequired
 };
