@@ -20,7 +20,6 @@ const RoleSelectionPage = () => {
 
     useEffect(()=> {
         const handleUnload = () => {
-            console.log('>> beforeunload triggered');
             sessionStorage.removeItem(ACCESS_ROLE);
             sessionStorage.removeItem(ACCESS_ROLE_EXPIRY);
             sessionStorage.removeItem(FROM_LOGIN);

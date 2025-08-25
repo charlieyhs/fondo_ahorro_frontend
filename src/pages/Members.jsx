@@ -18,8 +18,8 @@ const Members = () => {
         const getMembers = async () => {
             try{
                 const res = await apiClient.get('/savingsfund/members');
-                if(res.data?.success){
-                    setMembers(res.data.data.members);
+                if(res.data){
+                    setMembers(res.data);
                 }
             }catch(e){
                 if(e.response){
@@ -33,7 +33,7 @@ const Members = () => {
     }, []);
 
     return (
-        <div style={{display: 'flex', height: '100%'}}>
+        <div className='divPag'>
             
             <Message severity='warning' open={!!message} onClose={closeMessage}>
                 {message}

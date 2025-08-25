@@ -24,6 +24,7 @@ function LoadingBlocker({ open, message = "eti_loading", parentRef }) {
         left: 0,
         borderRadius: 'inherit',
         gap: 2,
+        
     };
 
     const sx = {

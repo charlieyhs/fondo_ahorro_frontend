@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { FormControl, InputLabel,
   OutlinedInput , InputAdornment, IconButton,
   FormHelperText} from '@mui/material';
-import Visibility from '@mui/icons-material/esm/Visibility';
-import VisibilityOff from '@mui/icons-material/esm/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useTranslation } from 'react-i18next';
 
 

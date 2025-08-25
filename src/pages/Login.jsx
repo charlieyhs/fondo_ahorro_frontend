@@ -68,8 +68,6 @@ const Login = () => {
         });
       }else{
         login(response.accessToken);
-        const from = location.state?.from?.pathname || '/home';
-        navigate(from, { replace:true });
       }
 
     } else {

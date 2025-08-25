@@ -1,5 +1,5 @@
 import { Avatar, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 import { useTranslation } from "react-i18next";
 import HomeIcon from '@mui/icons-material/Home';
@@ -8,10 +8,14 @@ import PeopleIcon from '@mui/icons-material/People';
 import { useState } from "react";
 import { useAuth } from '../../hooks/useAuth';
 import LoadingBlocker from '../Loaders/LoadingBlocker';
+import { AccountBalance, Paid, Timeline } from "@mui/icons-material";
 
 const menuItems = [
     {id: 'home', icon: <HomeIcon/> , path: '/home' },
-    {id: 'members', icon: <PeopleIcon/> , path: '/members' }
+    {id: 'members', icon: <PeopleIcon/> , path: '/members' },
+    {id: 'moneyboxes', icon: <AccountBalance/> , path: '/moneyboxes' },
+    {id: 'moneycontributions', icon: <Paid/> , path: '/moneycontributions' },
+    {id: 'ratehistory', icon: <Timeline/> , path: '/ratehistory' },
 ];
 
 export default function Sidebar(){
@@ -21,6 +25,7 @@ export default function Sidebar(){
 
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
     const [loading, setLoading] = useState(false);
     
     if(!user) {return null;}
@@ -59,14 +64,17 @@ export default function Sidebar(){
                     </div>
                 </Box>
                 <List>
-                    {menuItems.map(({id, icon, path}) => (
-                        <ListItem key={t('pag_'+id)} disablePadding>
-                            <ListItemButton LinkComponent={Link} to={path}>
-                                <ListItemIcon>{icon}</ListItemIcon>
-                                <ListItemText primary={t('pag_'+id)}/>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    {menuItems.map(({id, icon, path}) => {
+                        const isActive = location.pathname === path;
+                        return (
+                            <ListItem key={t('pag_'+id)} disablePadding>
+                                <ListItemButton LinkComponent={Link} to={path} selected={isActive}>
+                                    <ListItemIcon>{icon}</ListItemIcon>
+                                    <ListItemText primary={t('pag_'+id)}/>
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
                 </List>
                 <Box mt="auto" p={2}>
                     <ListItem disablePadding>

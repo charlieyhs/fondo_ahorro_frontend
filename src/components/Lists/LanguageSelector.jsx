@@ -87,7 +87,12 @@ const LanguageSelector = () => {
             <Menu
                 anchorEl={anchorEl}
                 open={open}
-                TransitionComponent={Fade}
+                slots={{
+                    transition: Fade
+                }}
+                slotProps={{
+                    list : {sx:{py: 0, minWidth: 150}}
+                }}
                 transitionDuration={200}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -98,12 +103,6 @@ const LanguageSelector = () => {
                     horizontal: 'right',
                 }}
                 onClose={() => setAnchorEl(null)}
-                MenuListProps={{
-                    sx: {
-                        py: 0,
-                        minWidth: 150
-                    }
-                }}
             >
                 {languages.map((lang) => (
                     <MenuItem

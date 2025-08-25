@@ -1,4 +1,4 @@
-import {Routes, Route, Navigate} from 'react-router-dom';
+import {Routes, Route, Navigate, useLocation} from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import PrivateRoute from './components/Seguridad/PrivateRoute';
@@ -9,52 +9,102 @@ import { AuthProvider } from './providers/LoginProvider';
 import { useAuth } from './hooks/useAuth';
 import { UserProvider } from './providers/UserProvider';
 import Members from './pages/Members';
+import MoneyContributions from './pages/MoneyContributions';
+import NotFound from './pages/NotFound';
+import PropTypes from 'prop-types';
+import RateHistory from './pages/RateHistory';
+import MoneyBoxes from './pages/MoneyBoxes';
+
+const ProtectedRouteWithUser = ({ children }) => (
+  <PrivateRoute>
+    <UserProvider>
+      {children}
+    </UserProvider>
+  </PrivateRoute>
+);
+
+ProtectedRouteWithUser.propTypes ={
+    children : PropTypes.node.isRequired
+}
+
+const LoginRoute = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  
+  if (isAuthenticated()) {
+    const from = location.state?.from?.pathname || '/home';
+    return <Navigate to={from} replace />;
+  }
+  
+  return (
+    <AuthProvider>
+      <Login />
+    </AuthProvider>
+  );
+};
 
 const App = () => {
 
   const { isAuthenticated } = useAuth();
-
-
+  const location = useLocation();
+  
   return (
     <LanguageProvider>
       <GeneralLayout>
         <Routes>
-          <Route path="/" element={
+          <Route path='/' element={
               isAuthenticated()
-                ? <Navigate to="/home" replace />
-                : <Navigate to="/login" replace />
+                ? <Navigate to='/home' replace />
+                : <Navigate to='/login' replace state={{ from: location }}/>
             }
           />
-          <Route path="/login" element={
-            <AuthProvider>
-              <Login />
-            </AuthProvider>
-          }/>
+          <Route path='/login' element={<LoginRoute />}/>
           
           {/*Rutas con usuario */ }
-          <Route path="/home" element={
-            <PrivateRoute>
-              <UserProvider>
+          <Route path='/home' element={
+            <ProtectedRouteWithUser>
                 <Home />
-              </UserProvider>
-            </PrivateRoute>
+            </ProtectedRouteWithUser>
           }/>
 
-          <Route path="/members" element={
-            <PrivateRoute>
-              <UserProvider>
+          <Route path='/members' element={
+            <ProtectedRouteWithUser>
                 <Members />
-              </UserProvider>
-            </PrivateRoute>
+            </ProtectedRouteWithUser>
           }/>
 
-          <Route path="/select-role" element={
+          <Route path='/moneyboxes' element={
+            <ProtectedRouteWithUser>
+                <MoneyBoxes />
+            </ProtectedRouteWithUser>
+          }/>
+
+          <Route path='/moneycontributions' element={
+            <ProtectedRouteWithUser>
+                <MoneyContributions/>
+            </ProtectedRouteWithUser>
+          }/>
+          
+          <Route path='/ratehistory' element={
+            <ProtectedRouteWithUser>
+                <RateHistory/>
+            </ProtectedRouteWithUser>
+          }/>
+
+          <Route path='/select-role' element={
             <PrivateRoute>
               <RoleSelectionPage />
             </PrivateRoute>
           }/>
 
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path='/404' element={<NotFound />} />
+          
+          <Route path='*' element={
+            isAuthenticated()
+              ? <Navigate to='/404' replace />
+              : <Navigate to='/login' replace />
+          } />
+
         </Routes>
       </GeneralLayout>
     </LanguageProvider>

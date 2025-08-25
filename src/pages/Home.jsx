@@ -7,7 +7,7 @@ const Home = () => {
   
 
   return (
-    <div style={{display: 'flex', height: '100%'}}>
+    <div className='divPag'>
       <Sidebar />
 
       <Box
