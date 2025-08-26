@@ -8,12 +8,12 @@ export function formatDatetime(instantString){
     const locale = i18next.language || 'es';
 
     return new Intl.DateTimeFormat(locale, {
+        weekday: "long",
         day: "2-digit",
-        month: "2-digit",
+        month: "long",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
     }).format(date);
 }
 
@@ -25,8 +25,9 @@ export function formatDate(dateString){
     const locale = i18next.language || 'es';
 
     return new Intl.DateTimeFormat(locale, {
+        weekday: "long",
         day: "2-digit",
-        month: "2-digit",
+        month: "long",
         year: "numeric"
     }).format(date);
 }
