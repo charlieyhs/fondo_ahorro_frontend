@@ -63,5 +63,13 @@
     "eti_action_ok" : "Action performed correctly",
     "pag_ratehistory_new" : "New rate",
     "eti_cancel" : "Cancel",
-    "eti_save" : "Save"
+    "eti_save" : "Save",
+    "eti_update" : "Update",
+    "eti_close" : "Close",
+    "eti_edit" : "Edit",
+    "eti_delete" : "Delete",
+    "eti_confirmation" : "Confirmation",
+    "eti_delete_record" : "Are you sure you want to delete this record?",
+    "eti_cancelar" : "Cancel",
+    "eti_confirm" : "Confirm"
 }
