@@ -19,10 +19,12 @@ import { Autocomplete, Box,
     TableRow, 
     TextField, 
     Typography } from "@mui/material";
-import { Add, Close, Edit, Save } from "@mui/icons-material";
+import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
 import DatePicker from "../components/Inputs/DatePicker";
 import LoadingBlocker from "../components/Loaders/LoadingBlocker";
 import { formatDate, formatDatetime } from "../utils/DateUtil";
+import InputNumber from "../components/Inputs/InputNumber";
+import ConfirmDialog from "../components/dialogs/ConfirmDialog";
 
 const RateHistory = () => {
     const {t} = useTranslation();
@@ -30,18 +32,18 @@ const RateHistory = () => {
     const dialogRef = useRef(null);
 
     const [loading, setLoading] = useState(false);
-    const [submittedNewRate, setSubmittedNewRate] = useState(false);
 
     const [severityMessage, setSeverityMessage] = useState('success');
     const [message, setMessage] = useState();
     const closeMessage = () => setMessage(null);
 
+    const [errors, setErrors] = useState([]);
 
     const [ratesHistory, setRatesHistory] = useState([]);
     const [openDlg, setOpenDlg] = useState(false);
     const [newRate, setNewRate] = useState({
         rateType: '',
-        rate : '',
+        rate : 0,
         startDate : null,
         endDate : null,
     });
@@ -83,14 +85,26 @@ const RateHistory = () => {
         getRateTypes();
         getRateHistory();
     }, []);
+    const handleOpenDialogEdit = (row) => {
+        setNewRate({
+            id: row.id,
+            rateType: row.rateType,
+            rate : row.rate,
+            startDate : new Date(row.startDate),
+            endDate : row.endDate ? new Date(row.endDate) : null,
+        });
+        handleOpenDialog();
+    };
 
-    const handleOpenDialog = () => setOpenDlg(true);
+    const handleOpenDialog = () => {
+        setErrors([]);
+        setOpenDlg(true);
+    }
     const handleCloseDialog = () => {
         setOpenDlg(false);
-        setSubmittedNewRate(false);
         setNewRate({
             rateType: '',
-            rate : '',
+            rate : 0,
             startDate : null,
             endDate : null,
         });
@@ -104,14 +118,6 @@ const RateHistory = () => {
         });
     };
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setNewRate({
-            ...newRate,
-            [name] : value,
-        });
-    };
-
     const handleDateChange = (newValue, name) => {
         setNewRate({
             ...newRate,
@@ -119,18 +125,50 @@ const RateHistory = () => {
         });
     };
 
+    const deleteRecord = async(id) => {
+        try{
+            const res = await apiClient.delete(`savingsfund/ratehistory/${id}`);
+            
+            if(res.data?.success){
+                setSeverityMessage('success');
+                setMessage(t('eti_action_ok'));
+                getRateHistory();
+            }
 
+        }catch(e){
+            setSeverityMessage('warning');
+            if(e.response){
+                setMessage(e.response.data.message);
+            }else{
+                setMessage(t('eti_error_addrate'));
+            }
+        }
+    };
 
     const handleSaveInterestRate = async() => {
         try{
             setLoading(true);
-            setSubmittedNewRate(true);
-            if(!newRate.rateType || !newRate.rate || !newRate.startDate){
+            
+            const requiredFields = ['rateType', 'rate', 'startDate'];
+
+            const missingFields = requiredFields.filter(field => {
+                const value = newRate[field];
+                return !value;
+            });
+
+            if(missingFields.length > 0){
+                setErrors(missingFields);
                 setSeverityMessage('warning');
-                setMessage(t('eti_fields_required'))
+                setMessage(t('eti_fields_required'));
                 return;
             }
-            const res = await apiClient.post('savingsfund/ratehistory', newRate);
+            setErrors([]);
+            let res = null;
+            if(!newRate.id){
+                res = await apiClient.post('savingsfund/ratehistory', newRate);
+            }else{
+                res = await apiClient.patch(`savingsfund/ratehistory/${newRate.id}`, newRate);
+            }
 
             if(res.data?.success){
                 setSeverityMessage('success');
@@ -147,7 +185,6 @@ const RateHistory = () => {
             }
         }finally{
             setLoading(false);
-            setSubmittedNewRate(false);
         }
     };
 
@@ -176,6 +213,8 @@ const RateHistory = () => {
                         variant='contained'
                         startIcon={<Add />}
                         onClick={handleOpenDialog}
+                        id="btnOpenDlg"
+                        title={t('eti_nuevo')}
                         >
                         {t('eti_nuevo')}
                     </Button>
@@ -204,11 +243,24 @@ const RateHistory = () => {
                                         <TableCell>{row.registeredBy}</TableCell>
                                         <TableCell>{formatDatetime(row.updatedAt)}</TableCell>
                                         <TableCell>
-                                            <IconButton
-                                                className="buttonRound"
-                                                onClick={handleOpenDialog}>
+                                            <div style={{display:'flex'}}>
+                                                <IconButton
+                                                    className="buttonRound btnEdit"
+                                                    title={t('eti_edit')}
+                                                    onClick={() => handleOpenDialogEdit(row)}>
                                                     <Edit/>
-                                            </IconButton>
+                                                </IconButton>
+
+                                                <ConfirmDialog
+                                                    textQuestion={t('eti_delete_record')}
+                                                    onConfirm={() => deleteRecord(row.id)}>
+                                                    <IconButton style={{marginLeft: '5px'}}
+                                                        className="button btnDelete"
+                                                        title={t('eti_delete')}>
+                                                        <Delete/>
+                                                    </IconButton>
+                                                </ConfirmDialog>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))
@@ -217,12 +269,13 @@ const RateHistory = () => {
                     </Table>
                 </TableContainer>
             </div>
-
+            
             <Dialog
                 open={openDlg}
                 onClose={handleCloseDialog}
                 maxWidth='sm'
                 fullWidth
+                disableRestoreFocus
             >
                 <div ref={dialogRef}>
                     <DialogTitle>
@@ -230,6 +283,7 @@ const RateHistory = () => {
                         <IconButton
                             aria-label='close'
                             onClick={handleCloseDialog}
+                            title={t('eti_close')}
                             sx={{
                                 position: 'absolute',
                                 right: 8,
@@ -245,37 +299,35 @@ const RateHistory = () => {
                         <Box component='form' sx={{mt: 1}}>
 
                             <Autocomplete
+                                value={newRate?.rateType || null}
                                 options={rateTypes}
                                 getOptionLabel={(type) => t('eti_ratetype_' + type)}
                                 renderInput={(params) => 
                                     <TextField
                                         {...params}
                                         label={t('eti_ratetype')}
-                                        error={submittedNewRate && !newRate.rateType} 
-                                        helperText={submittedNewRate && !newRate.rateType ? t('eti_required_field') : ''}
+                                        error={errors.includes('rateType')}
+                                        helperText={errors.includes('rateType') ? t('eti_required_field') : ''}
                                         color='success'
-                                        required/>
+                                        required
+                                        />
                                 }
                                 onChange={(_, newValue) => handleTypeRateChange(newValue)}
                             />
                             
-                            <TextField
-                                color='success'
-                                fullWidth
-                                margin='normal'
-                                label={t('eti_rate')}
-                                name='rate'
-                                type='number'
+                            <InputNumber
                                 value={newRate.rate}
-                                onChange={handleInputChange}
+                                onChange={(value) => setNewRate(prev => ({...prev, rate: value}))}
+                                min={0}
+                                max={100}
+                                decimalPlaces={2}
+                                label={t('eti_rate')}
                                 required
-                                slotProps={{
-                                    htmlInput: {step: '0.01', min:'0'}
-                                }}
-                                error={submittedNewRate && !newRate.rate} 
-                                helperText={submittedNewRate && !newRate.rate ? t('eti_required_field') : ''}
-                            />
-
+                                error={errors.includes('rate')}
+                                helperText={errors.includes('rate') ? t('eti_required_field') : ''}
+                                fullWidth
+                                margin="normal"
+                                color="success" />
 
                             <DatePicker 
                                 label={t('eti_startdate')}
@@ -286,8 +338,8 @@ const RateHistory = () => {
                                         fullWidth: true,
                                         margin: 'normal',
                                         required: true,
-                                        error: submittedNewRate && !newRate.startDate, 
-                                        helperText: submittedNewRate && !newRate.startDate ? t('eti_required_field') : '',
+                                        error: errors.includes('startDate'),
+                                        helperText: errors.includes('startDate') ? t('eti_required_field') : '',
                                     }
                                 }}
                             />
@@ -313,8 +365,9 @@ const RateHistory = () => {
                             onClick={handleSaveInterestRate}
                             startIcon={<Save />}
                             variant='contained'
+                            title={newRate.id ? t('eti_update') : t('eti_save')}
                         >
-                            {t('eti_save')}
+                            {newRate.id ? t('eti_update') : t('eti_save')}
                         </Button>
                     </DialogActions>
 
