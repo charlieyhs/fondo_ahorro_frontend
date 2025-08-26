@@ -1,6 +1,7 @@
 :root {
   --principal-color: #696ceb;
   --green-color: #4CAF50;
+  --red-color: #D32F2F;
 }
 body {
     font-family: Arial, sans-serif;
@@ -162,12 +163,18 @@ main {
   background: var(--principal-color) !important;
   border-radius: 2px;
   color: #fff !important;
+  border-color: var(--principal-color) !important;
 }
 
 .buttonRound {
-  background: var(--principal-color) !important;
   border-radius: 50% !important;
   color: #fff !important;
+}
+.btnEdit{
+  background: var(--principal-color) !important;
+}
+.btnDelete {
+  background: var(--red-color) !important;
 }
 
 .btnSave {
@@ -175,6 +182,7 @@ main {
   border-radius: 2px;
   color: #fff !important;
 }
+
 
 /* Media Queries para Responsividad */
 @media (max-width: 900px) {

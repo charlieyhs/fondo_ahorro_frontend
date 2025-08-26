@@ -10,8 +10,7 @@ const InputText = ({label, value, onChange, style, error, setError}) => {
     const handleChange = useCallback((e) => {
             onChange(e);
             if(error) setError(false);
-        },
-        [onChange, error, setError]
+        },[onChange, error, setError]
     );
     
     return (
