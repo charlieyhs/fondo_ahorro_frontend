@@ -20,7 +20,7 @@ export function formatDatetime(instantString){
 export function formatDate(dateString){
     if(!dateString) return "";
 
-    const date = new Date(dateString);
+    const date =dateWithoutTimezone(dateString);
 
     const locale = i18next.language || 'es';
 
@@ -30,4 +30,21 @@ export function formatDate(dateString){
         month: "long",
         year: "numeric"
     }).format(date);
+}
+
+export function dateWithoutTimezone(dateString){
+    const regex = /^(\d{4})([-/])(\d{2})\2(\d{2})$/;
+    const match = dateString.match(regex);
+
+    if (!match) {
+        console.warn(`Formato de fecha inválido: ${dateString}`);
+        return null;
+    }
+
+    const [, year, , month, day] = match;
+    const y = parseInt(year, 10);
+    const m = parseInt(month, 10) - 1;
+    const d = parseInt(day, 10);
+
+    return new Date(y, m, d);
 }

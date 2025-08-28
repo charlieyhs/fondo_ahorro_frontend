@@ -6,6 +6,7 @@ import { FormControl, InputLabel,
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useTranslation } from 'react-i18next';
+import { Lock } from '@mui/icons-material';
 
 
 const PasswordInputWithToggle = ({label, value, onChange, error, setError}) => {
@@ -35,6 +36,11 @@ const PasswordInputWithToggle = ({label, value, onChange, error, setError}) => {
               edge="end">
               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
+          </InputAdornment>
+        }
+        startAdornment={
+          <InputAdornment position="start">
+              <Lock/>
           </InputAdornment>
         }
         label={label}

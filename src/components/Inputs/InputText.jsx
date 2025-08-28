@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-const InputText = ({label, value, onChange, style, error, setError}) => {
+const InputText = ({label, value, onChange, style, error, setError, slotProps}) => {
     
     const {t} = useTranslation();
 
@@ -23,6 +23,7 @@ const InputText = ({label, value, onChange, style, error, setError}) => {
             value={value}
             onFocus={() => error && setError(false)}
             onChange={handleChange}
+            slotProps={slotProps}
         />
     );
 };
@@ -33,7 +34,8 @@ InputText.propTypes = {
     onChange : PropTypes.func,
     error : PropTypes.bool,
     setError : PropTypes.func,
-    style : PropTypes.object
+    style : PropTypes.object,
+    slotProps: PropTypes.object,
 };
 
 export default InputText;

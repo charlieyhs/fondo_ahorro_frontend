@@ -157,6 +157,7 @@ main {
 .divPag {
   display: flex; 
   height: 100%;
+  overflow-x: auto;
 }
 
 .button {
@@ -172,9 +173,11 @@ main {
 }
 .btnEdit{
   background: var(--principal-color) !important;
+  color: #fff !important;
 }
 .btnDelete {
   background: var(--red-color) !important;
+  color: #fff !important;
 }
 
 .btnSave {
@@ -294,3 +297,5 @@ main {
     padding: 20px;
   }
 }
+
+

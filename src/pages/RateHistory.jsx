@@ -42,6 +42,7 @@ const RateHistory = () => {
     const [ratesHistory, setRatesHistory] = useState([]);
     const [openDlg, setOpenDlg] = useState(false);
     const [newRate, setNewRate] = useState({
+        name: '',
         rateType: '',
         rate : 0,
         startDate : null,
@@ -52,7 +53,7 @@ const RateHistory = () => {
 
     const getRateHistory = async() => {
         try{
-            const res = await apiClient.get('savingsfund/ratehistory');
+            const res = await apiClient.get('ratehistory');
             if(res.data){
                 setRatesHistory(res.data);
             }
@@ -69,7 +70,7 @@ const RateHistory = () => {
     useEffect(() => {
         const getRateTypes = async () => {
             try{
-                const res = await apiClient.get('savingsfund/ratetypes');
+                const res = await apiClient.get('ratehistory/ratetypes');
                 if(res.data){
                     setRateTypes(res.data);
                 }
@@ -88,6 +89,7 @@ const RateHistory = () => {
     const handleOpenDialogEdit = (row) => {
         setNewRate({
             id: row.id,
+            name: row.name,
             rateType: row.rateType,
             rate : row.rate,
             startDate : new Date(row.startDate),
@@ -103,6 +105,7 @@ const RateHistory = () => {
     const handleCloseDialog = () => {
         setOpenDlg(false);
         setNewRate({
+            name: '',
             rateType: '',
             rate : 0,
             startDate : null,
@@ -127,7 +130,7 @@ const RateHistory = () => {
 
     const deleteRecord = async(id) => {
         try{
-            const res = await apiClient.delete(`savingsfund/ratehistory/${id}`);
+            const res = await apiClient.delete(`ratehistory/${id}`);
             
             if(res.data?.success){
                 setSeverityMessage('success');
@@ -140,7 +143,7 @@ const RateHistory = () => {
             if(e.response){
                 setMessage(e.response.data.message);
             }else{
-                setMessage(t('eti_error_addrate'));
+                setMessage(t('eti_error_deleterate'));
             }
         }
     };
@@ -149,7 +152,7 @@ const RateHistory = () => {
         try{
             setLoading(true);
             
-            const requiredFields = ['rateType', 'rate', 'startDate'];
+            const requiredFields = ['name','rateType', 'rate', 'startDate'];
 
             const missingFields = requiredFields.filter(field => {
                 const value = newRate[field];
@@ -165,9 +168,9 @@ const RateHistory = () => {
             setErrors([]);
             let res = null;
             if(!newRate.id){
-                res = await apiClient.post('savingsfund/ratehistory', newRate);
+                res = await apiClient.post('ratehistory', newRate);
             }else{
-                res = await apiClient.patch(`savingsfund/ratehistory/${newRate.id}`, newRate);
+                res = await apiClient.patch(`ratehistory/${newRate.id}`, newRate);
             }
 
             if(res.data?.success){
@@ -181,7 +184,7 @@ const RateHistory = () => {
             if(e.response){
                 setMessage(e.response.data.message);
             }else{
-                setMessage(t('eti_error_addrate'));
+                setMessage(t('eti_error_addrecord'));
             }
         }finally{
             setLoading(false);
@@ -214,15 +217,16 @@ const RateHistory = () => {
                         startIcon={<Add />}
                         onClick={handleOpenDialog}
                         id="btnOpenDlg"
-                        title={t('eti_nuevo')}
+                        title={t('eti_new')}
                         >
-                        {t('eti_nuevo')}
+                        {t('eti_new')}
                     </Button>
                 </div>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <TableCell>{t('eti_name')}</TableCell>
                                 <TableCell>{t('eti_ratetype')}</TableCell>
                                 <TableCell>{t('eti_rate')}</TableCell>
                                 <TableCell>{t('eti_startdate')}</TableCell>
@@ -236,6 +240,7 @@ const RateHistory = () => {
                             {
                                 ratesHistory.map((row) => (
                                     <TableRow key={row.id}>
+                                        <TableCell>{row.name}</TableCell>
                                         <TableCell>{t('eti_ratetype_'+row.rateType)}</TableCell>
                                         <TableCell>{row.rate}</TableCell>
                                         <TableCell>{formatDate(row.startDate)}</TableCell>
@@ -281,14 +286,13 @@ const RateHistory = () => {
                     <DialogTitle>
                         <Typography variant='h6' component='span'>{t('pag_ratehistory_new')}</Typography>
                         <IconButton
-                            aria-label='close'
+                            aria-label={t('eti_close')}
                             onClick={handleCloseDialog}
                             title={t('eti_close')}
                             sx={{
                                 position: 'absolute',
                                 right: 8,
                                 top: 8,
-                                color: (theme) => theme.palette.grey[500],
                             }}
                         >
                             <Close/>
@@ -297,6 +301,23 @@ const RateHistory = () => {
 
                     <DialogContent dividers>
                         <Box component='form' sx={{mt: 1}}>
+                            
+                            <TextField
+                                value={newRate.name}
+                                error={errors.includes('name')}
+                                helperText={errors.includes('name') ? t('eti_required_field') : ''}
+                                required
+                                label={t('eti_name')}
+                                color="success"
+                                fullWidth
+                                style={{marginBottom: '15px'}}
+                                onChange={(e) => setNewRate(prev => ({...prev, name: e.target.value}) )}
+                                slotProps={{
+                                    input:{
+                                        inputProps:{maxLength: 50}
+                                    }
+                                }}
+                            />
 
                             <Autocomplete
                                 value={newRate?.rateType || null}
