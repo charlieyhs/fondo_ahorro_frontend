@@ -98,5 +98,13 @@
     "eti_ratehistory" : "Tasa",
     "eti_yes" : "Si",
     "eti_no" : "No",
-    "eti_question_isinvestment": "¿Es inversion?"
+    "eti_question_isinvestment": "¿Es inversion?",
+    "pag_moneytransactiontype": "Tipo de aporte",
+    "eti_description" : "Descripción",
+    "eti_type" : "Tipo",
+    "pag_transactiontype" : "Tipos de aportes",
+    "pag_transactiontype_new" : "Nuevo tipo de aporte",
+    "eti_moneytransactiontype_INCOME" : "Ingreso",
+    "eti_moneytransactiontype_EXPENSE" : "Egreso",
+    "eti_moneytransactiontype_TRANSFER" : "Transferencia"
 }

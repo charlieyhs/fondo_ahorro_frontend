@@ -98,5 +98,13 @@
     "eti_ratehistory" : "Rate",
     "eti_yes" : "Yes",
     "eti_no" : "No",
-    "eti_question_isinvestment": "¿Is investment?"
+    "eti_question_isinvestment": "¿Is investment?",
+    "pag_moneytransactiontype": "Money transaction type",
+    "eti_description" : "Description",
+    "eti_type" : "Type",
+    "pag_transactiontype" : "Types of contributions",
+    "pag_transactiontype_new" : "New type of contribution",
+    "eti_moneytransactiontype_INCOME" : "Income",
+    "eti_moneytransactiontype_EXPENSE" : "Expense",
+    "eti_moneytransactiontype_TRANSFER" : "Transfer"
 }

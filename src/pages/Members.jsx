@@ -30,7 +30,11 @@ import DatePicker from "../components/Inputs/DatePicker";
 import dayjs from "dayjs";
 import { validateEmail } from "../utils/EmailValidator";
 
-
+const GENDER_COLOR = {
+        M: '#1976d2',
+        F: '#d81b60',
+        O: '#9e9e9e',
+    };
 
 const Members = () => {
 
@@ -46,12 +50,6 @@ const Members = () => {
     const [genders, setGenders] = useState([]);
     const [states, setStates] = useState([]);
     const [helperTextEmail, setHelperTextEmail] = useState('');
-
-    const genderColors = {
-        M: '#1976d2',
-        F: '#d81b60',
-        O: '#9e9e9e',
-    };
 
     const emptyMember = () => {
         return {
@@ -291,7 +289,7 @@ const Members = () => {
                                             <Chip
                                                 label={t('eti_gender_' + row.gender)}
                                                 sx={{
-                                                    backgroundColor: genderColors[row.gender],
+                                                    backgroundColor: GENDER_COLOR[row.gender],
                                                     color: 'white',
                                                 }}
                                             />
