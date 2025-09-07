@@ -15,6 +15,7 @@ import PropTypes from 'prop-types';
 import RateHistory from './pages/RateHistory';
 import MoneyBoxes from './pages/MoneyBoxes';
 import MoneyTransactionType from './pages/MoneyTransactionType';
+import Loan from './pages/Loan';
 
 const ProtectedRouteWithUser = ({ children }) => (
   <PrivateRoute>
@@ -83,6 +84,12 @@ const App = () => {
           <Route path='/moneytransactiontype' element={
             <ProtectedRouteWithUser>
                 <MoneyTransactionType/>
+            </ProtectedRouteWithUser>
+          }/>
+
+          <Route path='/loan' element={
+            <ProtectedRouteWithUser>
+                <Loan/>
             </ProtectedRouteWithUser>
           }/>
 

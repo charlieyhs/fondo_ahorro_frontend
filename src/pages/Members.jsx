@@ -211,6 +211,8 @@ const Members = () => {
             setSeverity('warning');
             if(e.response){
                 setMessage(e.response.data.message);
+            }else if(currentMember.id){
+                setMessage(t('eti_error_updatedrecord'));
             }else{
                 setMessage(t('eti_error_addrecord'));
             }
@@ -336,7 +338,7 @@ const Members = () => {
                 
                 <div ref={dialogRef}>
                     <DialogTitle>
-                        <Typography variant="h6" component="span">{t('pag_member_new')}</Typography>
+                        <Typography variant="h6" component="span">{currentMember.id ? t('eti_update_record') : t('pag_member_new')}</Typography>
                         <IconButton
                             aria-label={t('eti_close')}
                             onClick={handleCloseDialog}

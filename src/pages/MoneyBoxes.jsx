@@ -24,16 +24,19 @@ import { Autocomplete, Box, Button,
     Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import apiClient from "../clients/apiClient";
-import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
+import { Add, Autorenew, Close, Delete, Edit, Save } from "@mui/icons-material";
 import { dateWithoutTimezone, formatDate, formatDatetime } from "../utils/DateUtil";
 import LoadingBlocker from "../components/Loaders/LoadingBlocker";
 import DatePicker from "../components/Inputs/DatePicker";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog";
+import { formatNumber } from "../utils/NumbersUtil";
 
+const BASE_URL = 'money-location';
 
 const MoneyBoxes = () => {
     const {t} = useTranslation();
-    const dialogRef = useRef();
+    const dialogRef = useRef(null);
+    const pagRef = useRef(null);
     const [message, setMessage] = useState();
     const closeMessage = () => setMessage(null);
 
@@ -41,9 +44,11 @@ const MoneyBoxes = () => {
     const [dialog, setDialog] = useState(false);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingPag, setLoadingPag] = useState(false);
     const [loadingAutocomplete, setLoadingAutocomplete] = useState(false);
     const [severityMessage, setSeverityMessage] = useState('warning');
     const [responsibles, setResponsibles] = useState([]);
+    const [financialInstitutions, setFinancialInstitutions] = useState([]);
     const [rateHistorys, setRateHistorys] = useState([]);
 
     const isInvestment = [{
@@ -64,7 +69,9 @@ const MoneyBoxes = () => {
             investment : null,
             rateHistory : null,
             updatedAt: null,
-            startDate: null
+            startDate: null,
+            locationBalance : null,
+            financialInstitution : null
         }
     };
 
@@ -90,7 +97,7 @@ const MoneyBoxes = () => {
         try{
             setLoadingAutocomplete(true);
             let endpoint = null;
-            const body = {
+            const config = {
                 params: {
                     query : query,
                 }
@@ -99,15 +106,19 @@ const MoneyBoxes = () => {
             if(autocomplete === 'responsibles'){
                 endpoint = 'members/autocomplete';
             }else if(autocomplete === 'rateHistorys'){
-                endpoint = 'ratehistory/autocomplete';
+                endpoint = 'rate-history/autocomplete';
+            }else if(autocomplete === 'financialInstitutions'){
+                endpoint = `${BASE_URL}/complete_financial_institutions`;
             }
 
-            const res = await apiClient.get(endpoint, body);
+            const res = await apiClient.get(endpoint, config);
 
             if(res.data && autocomplete === 'responsibles'){
                 setResponsibles(res.data);
             }else if(res.data && autocomplete === 'rateHistorys'){
                 setRateHistorys(res.data);
+            }else if(autocomplete === 'financialInstitutions'){
+                setFinancialInstitutions(res.data);
             }
             
         }catch(e){
@@ -145,9 +156,9 @@ const MoneyBoxes = () => {
 
             let res = null;
             if(currentMoneyBox.id){
-                res = await apiClient.patch(`moneylocation/${currentMoneyBox.id}`,currentMoneyBox);
+                res = await apiClient.patch(`${BASE_URL}/${currentMoneyBox.id}`,currentMoneyBox);
             }else{
-                res = await apiClient.post('moneylocation', currentMoneyBox);
+                res = await apiClient.post(BASE_URL, currentMoneyBox);
             }
 
             if(res.data?.success){
@@ -161,6 +172,8 @@ const MoneyBoxes = () => {
             setSeverityMessage('warning');
             if(e.response){
                 setMessage(e.response.data.message);
+            }else if(currentMoneyBox.id){
+                setMessage(t('eti_error_updatedrecord'));
             }else{
                 setMessage(t('eti_error_addrecord'));
             }
@@ -177,14 +190,37 @@ const MoneyBoxes = () => {
             investment : row.investment,
             rateHistory : row.rateHistory,
             updatedAt: new Date(row.updatedAt),
-            startDate: dateWithoutTimezone(row.startDate)
+            startDate: dateWithoutTimezone(row.startDate),
+            locationBalance : row.locationBalance,
+            financialInstitution : row.financialInstitution,
         });
         handleOpenDialog();
     };
 
+    const handleUpdateBalance = async(id) => {
+        try{
+            setLoadingPag(true);
+            const res = await apiClient.patch(`${BASE_URL}/${id}/update_balance`);
+            if(res.data?.success){
+                setSeverityMessage('success');
+                setMessage(t('eti_action_ok'));
+                getMoneyBoxes();
+            }
+        }catch(e){
+            setSeverityMessage('warning');
+            if(e.response){
+                setMessage(e.response.data.message);
+            }else{
+                setMessage(t('eti_error_delete'));
+            }
+        }finally{
+            setLoadingPag(false);
+        }
+    };
+
     const handleDeleteRecord = async(id) => {
         try{
-            const res = await apiClient.delete(`moneylocation/${id}`);
+            const res = await apiClient.delete(`${BASE_URL}/${id}`);
             if(res.data?.success){
                 setSeverityMessage('success');
                 setMessage(t('eti_action_ok'));
@@ -202,7 +238,7 @@ const MoneyBoxes = () => {
 
     const getMoneyBoxes = async() => {
         try{
-            const res = await apiClient.get('moneylocation');
+            const res = await apiClient.get(BASE_URL);
             if(res.data){
                 setMoneyBoxes(res.data);
             }
@@ -220,7 +256,9 @@ const MoneyBoxes = () => {
     },[])
 
     return (
-        <div className='divPag'>
+        <div className='divPag' ref={pagRef}>
+            <LoadingBlocker open={loadingPag} parentRef={pagRef}/>
+
             <Message severity={severityMessage} open={!!message} onClose={closeMessage}>
                 {message}
             </Message>
@@ -254,10 +292,12 @@ const MoneyBoxes = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>{t('eti_startdate')}</TableCell>
+                                <TableCell>{t('eti_financial_institution')}</TableCell>
                                 <TableCell>{t('eti_name')}</TableCell>
                                 <TableCell>{t('eti_responsible')}</TableCell>
                                 <TableCell>{t('eti_isinvestment')}</TableCell>
                                 <TableCell>{t('eti_currentrate')}</TableCell>
+                                <TableCell>{t('eti_currentbalance')}</TableCell>
                                 <TableCell>{t('eti_updatedat')}</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -267,13 +307,22 @@ const MoneyBoxes = () => {
                                 moneyBoxes.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell>{formatDate(row.startDate)}</TableCell>
+                                        <TableCell>{row.financialInstitution?.name}</TableCell>
                                         <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.responsible.firstName + " " + row.responsible.lastName}</TableCell>
                                         <TableCell>{row.investment ? t('eti_yes') : t('eti_no')}</TableCell>
                                         <TableCell>{row.rateHistory.rate}</TableCell>
+                                        <TableCell>{formatNumber(row.locationBalance?.balance)}</TableCell>
                                         <TableCell>{formatDatetime(row.updatedAt)}</TableCell>
                                         <TableCell>
-                                            <div style={{display:'flex'}}>
+                                            <div style={{display:'flex', gap: '5px'}}>
+                                                <IconButton
+                                                    className="btnSave"
+                                                    title={t('eti_update_balance')}
+                                                    onClick={() => handleUpdateBalance(row.id)}>
+                                                    <Autorenew/>
+                                                </IconButton>
+
                                                 <IconButton
                                                     className="btnEdit"
                                                     title={t('eti_edit')}
@@ -284,7 +333,6 @@ const MoneyBoxes = () => {
                                                     textQuestion={t('eti_delete_record')}
                                                     onConfirm={() => handleDeleteRecord(row.id)}>
                                                     <IconButton
-                                                        style={{marginLeft:'5px'}}
                                                         className="btnDelete"
                                                         title={t('btn_delete')}>
                                                         <Delete />
@@ -307,7 +355,8 @@ const MoneyBoxes = () => {
                     disableRestoreFocus>
                     <div ref={dialogRef}>
                         <DialogTitle>
-                            <Typography variant="h6" component="span">{t('pag_moneybox_new')}</Typography>
+                            <Typography variant="h6" component="span">{currentMoneyBox.id ? t('eti_update_record')
+                                                                : t('pag_moneybox_new')}</Typography>
                             <IconButton
                                 aria-label={t('eti_close')}
                                 onClick={handleCloseDialog}
@@ -324,6 +373,44 @@ const MoneyBoxes = () => {
                         <DialogContent dividers>
                             <Box component="form" sx={{mt: 1}}>
                                 <Stack spacing={2}>
+
+                                    <DatePicker 
+                                        label={t('eti_startdate')}
+                                        value={currentMoneyBox.startDate}
+                                        onChange={(newValue) => handleValueChange(newValue, 'startDate') }
+                                        slotProps={{
+                                            textField: {
+                                                required: true,
+                                                error: errors.includes('startDate'),
+                                                helperText: errors.includes('startDate') ? t('eti_required_field') : '',
+                                                color: 'success',
+                                                fullWidth: true
+                                            }
+                                        }}
+                                    />
+
+                                    <Autocomplete
+                                        options={financialInstitutions}
+                                        value={currentMoneyBox.financialInstitution || null}
+                                        required
+                                        onChange={(_, value) => handleValueChange(value, 'financialInstitution')}
+                                        getOptionLabel={(financialInstitution) => financialInstitution.name}
+                                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                                        onInputChange={(_, query) => handleInputChangeAutocomplete(query,'financialInstitutions')}
+                                        renderInput={(params) => 
+                                            <TextField
+                                                {...params}
+                                                label={t('eti_financial_institution')}
+                                                error={errors.includes('financialInstitution')}
+                                                helperText={errors.includes('financialInstitution') ? t('eti_required_field') : ''}
+                                                color="succces"
+                                                fullWidth
+                                                required
+                                            />
+                                        }
+                                        onOpen={() => handleInputChangeAutocomplete('','financialInstitutions')}
+                                        loading={loadingAutocomplete}
+                                    />
 
                                     <TextField
                                         value={currentMoneyBox.name}
@@ -342,20 +429,7 @@ const MoneyBoxes = () => {
                                             }
                                         }}
                                     />
-                                    <DatePicker 
-                                        label={t('eti_startdate')}
-                                        value={currentMoneyBox.startDate}
-                                        onChange={(newValue) => handleValueChange(newValue, 'startDate') }
-                                        slotProps={{
-                                            textField: {
-                                                required: true,
-                                                error: errors.includes('startDate'),
-                                                helperText: errors.includes('startDate') ? t('eti_required_field') : '',
-                                                color: 'success',
-                                                fullWidth: true
-                                            }
-                                        }}
-                                    />
+                                    
                                     <Autocomplete
                                         options={responsibles}
                                         value={currentMoneyBox.responsible || null}

@@ -159,31 +159,39 @@ main {
   height: 100%;
   overflow-x: auto;
 }
-
+.button, .btnEdit, .btnDelete, .btnSave{
+  color: #fff !important;
+}
 .button {
   background: var(--principal-color) !important;
   border-radius: 2px;
-  color: #fff !important;
   border-color: var(--principal-color) !important;
 }
 
-.buttonRound {
-  border-radius: 50% !important;
-  color: #fff !important;
-}
+
 .btnEdit{
   background: var(--principal-color) !important;
-  color: #fff !important;
 }
 .btnDelete {
   background: var(--red-color) !important;
-  color: #fff !important;
 }
-
 .btnSave {
   background: var(--green-color) !important;
   border-radius: 2px;
-  color: #fff !important;
+}
+
+
+
+.divRight{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 20px;
+}
+.divTitleBtnNew{
+  display: flex ;
+  justify-content: space-between;
+  align-items: center;
 }
 
 

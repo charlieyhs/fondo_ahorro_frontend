@@ -28,7 +28,7 @@ import ConfirmDialog from "../components/dialogs/ConfirmDialog";
 import LoadingBlocker from "../components/Loaders/LoadingBlocker";
 import { GREEN_COLOR, RED_DELETE } from "../css/General";
 
-const BASE_URL = "moneytransaction/moneytransactiontypes";
+const BASE_URL = "money-transaction-types";
 
 const TYPE_COLORS = {
   INCOME: GREEN_COLOR,
@@ -46,13 +46,15 @@ const MoneyTransactionType = () => {
     const [dialog, setDialog] = useState(false);
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [reasons, setReasons] = useState([]);
 
     const emptyType = () => {
         return {
             name : '',
             description : '',
             type : '',
-            updatedAt : null
+            updatedAt : null,
+            reason : ''
         };
     }
 
@@ -94,6 +96,7 @@ const MoneyTransactionType = () => {
             description : row.description,
             type : row.type,
             updatedAt: new Date(row.updatedAt),
+            reason : row.reason,
         });
         handleOpenDialog();
     };
@@ -102,7 +105,7 @@ const MoneyTransactionType = () => {
             try{
                 setLoading(true);
     
-                const requiredFields = ['name', 'description','type'];
+                const requiredFields = ['name', 'description','type','reason'];
     
                 const missingFields = requiredFields.filter(field => {
                     const value = currentType[field];
@@ -135,6 +138,8 @@ const MoneyTransactionType = () => {
                 setSeverityMessage('warning');
                 if(e.response){
                     setMessage(e.response.data.message);
+                }else if(currentType.id){
+                    setMessage(t('eti_error_updatedrecord'));
                 }else{
                     setMessage(t('eti_error_addrecord'));
                 }
@@ -170,9 +175,24 @@ const MoneyTransactionType = () => {
 
     const getTypesOptions = async() => {
         try{
-            const res = await apiClient.get('moneytransaction/typestransaction');
+            const res = await apiClient.get(`${BASE_URL}/types-transaction`);
             if(res.data){
                 setTypesOptions(res.data);
+            }
+        }catch(e){
+            setSeverityMessage('warning');
+            if(e.response){
+                setMessage(e.response.data.message);
+            }else{
+                setMessage('Error obtaining the field lists');
+            }
+        }
+    };
+    const getReasons = async() => {
+        try{
+            const res = await apiClient.get(`${BASE_URL}/reasons`);
+            if(res.data){
+                setReasons(res.data);
             }
         }catch(e){
             setSeverityMessage('warning');
@@ -186,6 +206,7 @@ const MoneyTransactionType = () => {
     useEffect(() => {
         getTypes();
         getTypesOptions();
+        getReasons();
     }, []);
 
     return (
@@ -223,6 +244,7 @@ const MoneyTransactionType = () => {
                                 <TableCell>{t('eti_name')}</TableCell>
                                 <TableCell>{t('eti_description')}</TableCell>
                                 <TableCell>{t('eti_type')}</TableCell>
+                                <TableCell>{t('eti_reason')}</TableCell>
                                 <TableCell>{t('eti_updatedat')}</TableCell>
                                 <TableCell></TableCell>
                             </TableRow>
@@ -243,6 +265,7 @@ const MoneyTransactionType = () => {
                                                 variant="filled"
                                             />
                                         </TableCell>
+                                        <TableCell>{t('eti_reason_'+row.reason)}</TableCell>
                                         <TableCell>{formatDatetime(row.updatedAt)}</TableCell>
                                         <TableCell>
                                             <div style={{display: 'flex'}}>
@@ -279,7 +302,8 @@ const MoneyTransactionType = () => {
                 disableRestoreFocus>
                 <div ref={dialogRef}>
                     <DialogTitle>
-                        <Typography variant="h6" component="span">{t('pag_transactiontype_new')}</Typography>
+                        <Typography variant="h6" component="span">{currentType.id ? t('eti_update_record') 
+                                                        : t('pag_transactiontype_new')}</Typography>
                         <IconButton
                             aria-label={t('eti_close')}
                             onClick={handleCloseDialog}
@@ -330,6 +354,23 @@ const MoneyTransactionType = () => {
                                     }
                                     required
                                     onChange={(_, value) => handleValueChange(value, 'type')}
+                                />
+
+                                <Autocomplete
+                                    value={currentType.reason || null}
+                                    options={reasons}
+                                    getOptionLabel={(reason) => t('eti_reason_'+reason)}
+                                    renderInput={(params) => 
+                                        <TextField
+                                            {...params}
+                                            label={t('eti_reason')}
+                                            error={errors.includes('reason')}
+                                            helperText={errors.includes('reason') ? t('eti_required_field') : ''}
+                                            color="success"
+                                            required />
+                                    }
+                                    required
+                                    onChange={(_, value) => handleValueChange(value, 'reason')}
                                 />
 
                                 <TextField

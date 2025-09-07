@@ -1,13 +1,13 @@
 import { TextField } from "@mui/material";
 import PropTypes from "prop-types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const InputNumber = ({
     value,
     onChange,
     min = 0,
-    max = 100,
+    max = Infinity,
     decimalPlaces = 2,
     label,
     required = false,
@@ -15,11 +15,13 @@ const InputNumber = ({
     helperText,
     ...props
 }) => {
-    const {i18n} = useTranslation();
+    const { i18n } = useTranslation();
     const [inputValue, setInputValue] = useState('');
-
     const [localError, setLocalError] = useState(false);
     const [localHelperText, setLocalHelperText] = useState('');
+    const inputRef = useRef(null);
+    const nextSelection = useRef(null);
+    const isEditing = useRef(false);
 
     const getSeparators = useCallback(() => {
         const numberFormat = new Intl.NumberFormat(i18n.language);
@@ -30,99 +32,188 @@ const InputNumber = ({
         };
     }, [i18n]);
 
+    // Función para formatear solo la parte entera con separadores de miles
+    const formatIntegerPart = useCallback((num) => {
+        if (num === null || num === undefined || isNaN(num)) return '';
+        
+        // Formatear solo la parte entera
+        const integerPart = Math.floor(Math.abs(num));
+        const formatter = new Intl.NumberFormat(i18n.language, {
+            useGrouping: true,
+            maximumFractionDigits: 0
+        });
+        
+        return formatter.format(integerPart);
+    }, [i18n.language]);
+
+    // Función para formatear el número completo con decimales
+    const formatNumberWithDecimals = useCallback((num) => {
+        if (num === null || num === undefined || isNaN(num)) return '';
+        
+        const formatter = new Intl.NumberFormat(i18n.language, {
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces,
+            useGrouping: true
+        });
+        
+        return formatter.format(num);
+    }, [i18n.language, decimalPlaces]);
+
+    const parseInputValue = useCallback((inputStr, separators) => {
+        if (!inputStr || inputStr === '') return null;
+        
+        const cleanValue = inputStr
+            .replace(new RegExp(`\\${separators.thousand}`, 'g'), '')
+            .replace(separators.decimal, '.');
+        
+        const num = parseFloat(cleanValue);
+        return isNaN(num) ? null : num;
+    }, []);
+
+    // Efecto para mantener la posición del cursor
+    useLayoutEffect(() => {
+        if (inputRef.current && nextSelection.current !== null) {
+            const inputElement = inputRef.current.querySelector('input');
+            if (inputElement?.setSelectionRange) {
+                inputElement.setSelectionRange(
+                    nextSelection.current.start,
+                    nextSelection.current.end
+                );
+            }
+            nextSelection.current = null;
+        }
+    });
+
     useEffect(() => {
         setLocalError(error);
         setLocalHelperText(helperText || '');
     }, [error, helperText]);
 
     useEffect(() => {
-        if(value === null || value === undefined){
-            setInputValue('');
-            return;
+        if (!isEditing.current) {
+            if (value === null || value === undefined) {
+                setInputValue('');
+            } else {
+                const formatted = formatNumberWithDecimals(value);
+                setInputValue(formatted);
+            }
         }
-        const separator = getSeparators();
-        const formatted = value
-            .toFixed(decimalPlaces)
-            .replace('.',separator.decimal);
-        
-        setInputValue(formatted);
-
-    }, [value, decimalPlaces, getSeparators]);
+    }, [value, formatNumberWithDecimals]);
 
     const handleChange = (event) => {
+        isEditing.current = true;
         const rawValue = event.target.value;
+        const cursorPosition = event.target.selectionStart;
         const separators = getSeparators();
 
-        const validPattern = new RegExp(
-            `^[0-9${separators.thousand}]*${separators.decimal}?[0-9]{0,${decimalPlaces}}$`
-        );
+        // Permitir solo números y separadores
+        const allowedChars = new RegExp(`^[0-9\\${separators.thousand}\\${separators.decimal}]*$`);
+        if (!allowedChars.test(rawValue) && rawValue !== '') return;
 
-        if(!validPattern.test(rawValue) && rawValue !== '') return;
+        // Validaciones de decimal
+        const decimalCount = (rawValue.match(new RegExp(`\\${separators.decimal}`, 'g')) || []).length;
+        if (decimalCount > 1) return;
 
-        setInputValue(rawValue);
+        const decimalIndex = rawValue.indexOf(separators.decimal);
+        if (decimalIndex !== -1) {
+            const decimals = rawValue.substring(decimalIndex + 1);
+            if (decimals.length > decimalPlaces) return;
+        }
+
+        // Parsear y validar rango
+        const numericValue = parseInputValue(rawValue, separators);
+        if (numericValue !== null && (numericValue < min || numericValue > max)) return;
+
+        // Manejar campo vacío
+        if (rawValue === '') {
+            setInputValue('');
+            setLocalError(false);
+            setLocalHelperText('');
+            onChange(null);
+            return;
+        }
+
+        // Formatear el valor en tiempo real - solo parte entera mientras se edita
+        let formattedValue = rawValue;
+        if (numericValue !== null) {
+            // Si hay un separador decimal, formatear la parte entera y mantener los decimales tal cual
+            if (decimalIndex !== -1) {
+                const integerPart = Math.floor(numericValue);
+                const decimalPart = rawValue.substring(decimalIndex + 1);
+                
+                const formattedInteger = formatIntegerPart(integerPart);
+                formattedValue = formattedInteger + separators.decimal + decimalPart;
+            } else {
+                // Si no hay separador decimal, formatear solo la parte entera
+                formattedValue = formatIntegerPart(numericValue);
+            }
+        }
+
+        setInputValue(formattedValue);
         setLocalError(false);
         setLocalHelperText('');
 
-        let numericValue = rawValue
-            .replace(new RegExp(`\\${separators.thousand}`, 'g'), '')
-            .replace(separators.decimal, '.');
-        
-        let num = parseFloat(numericValue);
-        if(isNaN(num)){
-            num = 0;
-        }
-        if(num < min || num > max) return;
-
-        setInputValue(rawValue);
-
-        if(numericValue === ''){
-            onChange(null);
+        if (numericValue !== null) {
+            onChange(numericValue);
         }
 
+        // Calcular nueva posiciÃ³n del cursor
+        const newCursorPosition = cursorPosition + (formattedValue.length - rawValue.length);
+        nextSelection.current = { 
+            start: Math.max(0, newCursorPosition), 
+            end: Math.max(0, newCursorPosition) 
+        };
     };
 
     const handleBlur = () => {
-        if(inputValue === ''){
+        isEditing.current = false;
+        if (inputValue === '') {
             onChange(null);
             return;
         }
+
         const separators = getSeparators();
-        let numericValue = parseFloat(
-            inputValue
-                .replace(new RegExp(`\\${separators.thousand}`, 'g'), '')
-                .replace(separators.decimal, '.')
-        );
-        if(isNaN(numericValue)){
+        const numericValue = parseInputValue(inputValue, separators);
+        
+        if (numericValue === null) {
             setInputValue('');
             onChange(null);
             return;
         }
-
-        numericValue = Math.max(min, Math.min(max, numericValue));
-        numericValue = Math.round(numericValue * 10 ** decimalPlaces) / 10 ** decimalPlaces;
-
-        onChange(numericValue);
+        
+        // Aplicar límites y redondeo
+        const clampedValue = Math.max(min, Math.min(max, numericValue));
+        const roundedValue = Number(clampedValue.toFixed(decimalPlaces));
+        
+        // Formatear valor final con decimales
+        const finalFormatted = formatNumberWithDecimals(roundedValue);
+        setInputValue(finalFormatted);
+        onChange(roundedValue);
     };
+
+    
 
     const separators = getSeparators();
 
     return (
-        <TextField {...props}
+        <TextField
+            {...props}
+            ref={inputRef}
             label={label}
             value={inputValue}
             onChange={handleChange}
-            required
+            required={required}
             onBlur={handleBlur}
             error={localError}
             helperText={localHelperText}
-            slotProps={{htmlInput: {
-                            inputMode: 'decimal',
-                            pattern: `[0-9${separators.thousand}]*${separators.decimal}?[0-9]{0,${decimalPlaces}}`,
-                            min,
-                            max,
-                            required,
-                        }
-                    }}
+            slotProps={{
+                htmlInput: {
+                    inputMode: 'decimal',
+                    pattern: `[0-9\\${separators.thousand}\\${separators.decimal}]*`,
+                    min,
+                    max,
+                }
+            }}
         />
     );
 };

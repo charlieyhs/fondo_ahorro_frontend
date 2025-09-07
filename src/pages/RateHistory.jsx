@@ -26,6 +26,8 @@ import { formatDate, formatDatetime } from "../utils/DateUtil";
 import InputNumber from "../components/Inputs/InputNumber";
 import ConfirmDialog from "../components/dialogs/ConfirmDialog";
 
+const BASE_URL = "rate-history";
+
 const RateHistory = () => {
     const {t} = useTranslation();
 
@@ -53,7 +55,7 @@ const RateHistory = () => {
 
     const getRateHistory = async() => {
         try{
-            const res = await apiClient.get('ratehistory');
+            const res = await apiClient.get(BASE_URL);
             if(res.data){
                 setRatesHistory(res.data);
             }
@@ -70,7 +72,7 @@ const RateHistory = () => {
     useEffect(() => {
         const getRateTypes = async () => {
             try{
-                const res = await apiClient.get('ratehistory/ratetypes');
+                const res = await apiClient.get(`${BASE_URL}/ratetypes`);
                 if(res.data){
                     setRateTypes(res.data);
                 }
@@ -130,7 +132,7 @@ const RateHistory = () => {
 
     const deleteRecord = async(id) => {
         try{
-            const res = await apiClient.delete(`ratehistory/${id}`);
+            const res = await apiClient.delete(`${BASE_URL}/${id}`);
             
             if(res.data?.success){
                 setSeverityMessage('success');
@@ -168,9 +170,9 @@ const RateHistory = () => {
             setErrors([]);
             let res = null;
             if(!newRate.id){
-                res = await apiClient.post('ratehistory', newRate);
+                res = await apiClient.post(BASE_URL, newRate);
             }else{
-                res = await apiClient.patch(`ratehistory/${newRate.id}`, newRate);
+                res = await apiClient.patch(`${BASE_URL}/${newRate.id}`, newRate);
             }
 
             if(res.data?.success){
@@ -183,6 +185,8 @@ const RateHistory = () => {
             setSeverityMessage('warning');
             if(e.response){
                 setMessage(e.response.data.message);
+            }else if(newRate.id){
+                setMessage(t('eti_error_updatedrecord'));
             }else{
                 setMessage(t('eti_error_addrecord'));
             }
@@ -250,7 +254,7 @@ const RateHistory = () => {
                                         <TableCell>
                                             <div style={{display:'flex'}}>
                                                 <IconButton
-                                                    className="buttonRound btnEdit"
+                                                    className="btnEdit"
                                                     title={t('eti_edit')}
                                                     onClick={() => handleOpenDialogEdit(row)}>
                                                     <Edit/>
@@ -284,7 +288,7 @@ const RateHistory = () => {
             >
                 <div ref={dialogRef}>
                     <DialogTitle>
-                        <Typography variant='h6' component='span'>{t('pag_ratehistory_new')}</Typography>
+                        <Typography variant='h6' component='span'>{newRate.id ? t('eti_update_record') : t('pag_ratehistory_new')}</Typography>
                         <IconButton
                             aria-label={t('eti_close')}
                             onClick={handleCloseDialog}
