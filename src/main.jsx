@@ -14,6 +14,27 @@ const theme = createTheme({
         }
     },
     components: {
+      MuiRadio: {
+        styleOverrides: {
+          root: {
+            '&.Mui-checked': {
+              color: PRINCIPAL_COLOR, // color cuando está seleccionado (puedes usar theme.palette.primary.main)
+            },
+          },
+        },
+      },
+      MuiStepIcon: {
+        styleOverrides: {
+          root: {
+            '&.Mui-active': {
+              color: PRINCIPAL_COLOR,
+            },
+            '&.Mui-completed': {
+              color: GREEN_COLOR,
+            },
+          },
+        },
+      },
       MuiListItemButton: {
         styleOverrides: {
           root: {
@@ -29,6 +50,7 @@ const theme = createTheme({
       }
     }
 });
+
 
 createRoot(document.getElementById('root')).render(
   <Router>

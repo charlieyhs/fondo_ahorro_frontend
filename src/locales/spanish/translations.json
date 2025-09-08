@@ -14,7 +14,9 @@
     "eti_flag": "Bandera",
     "eti_change_language" : "Cambiar idioma",
     "pg_role_selection_title" : "Selecciona tu rol",
-    "footer.powered_by" : "Desarrollador por:",
+    "footer": {
+        "powered_by" : "Desarrollador por:"
+    },
     "eti_desc_role_admin" : "Acceso completo al sistema",
     "eti_desc_role_treasurer" : "Gestión de pagos y finanzas",
     "eti_desc_role_member" : "Acceso básico al sistema",
@@ -117,6 +119,7 @@
     "eti_reason" : "Motivo",
     "eti_reason_FUND_CONTRIBUTION" : "Aporte al fondo",
     "eti_reason_LOAN_DISBURSEMENT" : "Préstamo",
+    "eti_reason_LOAN_PAYMENT" : "Pago préstamo",
     "eti_contribution_date" :"Fecha de aporte",
     "eti_member" : "Miembro",
     "eti_amount" : "Valor",
@@ -134,5 +137,46 @@
     "btn_cancel_loan" : "Cancelar préstamo",
     "eti_cancel_loan" : "¿Está seguro/a de cancelar este préstamo? Al hacerlo, se anulará la solicitud y no se generará ningún movimiento de dinero. Esta acción no se podrá revertir",
     "eti_error_action" : "Error realizando la acción",
-    "eti_update_balance" : "Actualizar saldo"
+    "eti_update_balance" : "Actualizar saldo",
+    "eti_quotas" : "Cuotas",
+    "eti_quota_value" : "Valor cuota",
+    "paymentSelection" : {
+        "mainTitle" : "Agregar pago",
+        "title": "¿Cómo deseas pagar?",
+        "enterAmount": "Ingrese monto"
+    },
+    "paymentOptions": {
+        "fullAmount": "Monto Completo",
+        "minValue": "Monto cuota",
+        "customAmount": "Monto Personalizado"
+    },
+    "paymentSteps": {
+        "selection": "Monto",
+        "success": "Éxito"
+    },
+    "paymentDetails": {
+        "title": "Detalles del Pago",
+        "initialAmount": "Monto Inicial",
+        "balance": "Saldo Actual",
+        "quotaValue": "Valor de Cuota",
+        "currentPayment": "Pago Actual",
+        "interestRate" : "Tasa de interes"
+    },
+    "loanDetails": {
+        "member": "Miembro",
+        "loanCode": "Código de Préstamo",
+        "status": "Estado"
+    },
+    "common": {
+        "confirm": "Confirmar Pago",
+        "unknownStep": "Paso desconocido"
+    },
+    "paymentSuccess": {
+        "mainTitle": "Pago Exitoso",
+        "title": "¡Pago Realizado!",
+        "amountPaid": "Monto Pagado",
+        "date": "Fecha",
+        "reference": "Número de Referencia",
+        "returnToLoan": "Regresar a los préstamos"
+    }
 }

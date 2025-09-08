@@ -180,6 +180,15 @@ main {
   border-radius: 2px;
 }
 
+.btn-disabled {
+  background-color: #cccccc;
+  color: #666666; 
+  border: 1px solid #aaaaaa;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 
 
 .divRight{
@@ -305,5 +314,3 @@ main {
     padding: 20px;
   }
 }
-
-

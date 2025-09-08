@@ -28,6 +28,7 @@ import ConfirmDialog from "../components/dialogs/ConfirmDialog";
 import { formatNumber } from "../utils/NumbersUtil";
 import InputNumber from "../components/Inputs/InputNumber";
 import { BLUE_COLOR, GREEN_COLOR, ORANGE_COLOR, RED_DELETE } from "../css/General";
+import LoanPayment from "../components/dialogs/LoanPayment";
 
 const BASE_URL = 'loan';
 const STATUS_COLOR = {
@@ -51,6 +52,9 @@ const Loan = () => {
     const [loans, setLoans] = useState([]);
     const [members, setMembers] = useState([]);
     const [moneyLocations, setMoneyLocations] = useState([]);
+    const [makePayment, setMakePayment] = useState(false);
+
+    
 
     const getLoans = async() => {
         try{
@@ -59,6 +63,7 @@ const Loan = () => {
                 setLoans(res.data);
             }
         }catch(e){
+            setSeverityMessage('warning');
             if(e.response){
                 setMessage(e.response.data.message);
             }else{
@@ -74,13 +79,14 @@ const Loan = () => {
     const emptyLoan = () => {
         return {
             id : null,
-            member : '',
+            member : null,
             startDate : null,
             moneyLocation : null,
             amount : null,
             interestRate: null,
             status: null,
             updatedAt : null,
+            quotas : null,
         }
     };
 
@@ -141,7 +147,7 @@ const Loan = () => {
         try{
             setLoading(true);
 
-            const requiredFields = ['member', 'startDate','moneyLocation','amount','interestRate'];
+            const requiredFields = ['member', 'startDate','moneyLocation','amount','interestRate', 'quotas'];
 
             const missingFields = requiredFields.filter(field => !currentLoan[field]);
 
@@ -181,8 +187,8 @@ const Loan = () => {
         }
     };
 
-    const handleOpenEditDialog = (row) => {
-        setCurrentLoan({
+    const getCurrentLoanRow = (row) => (
+        {
             id : row.id,
             member : row.member,
             startDate : dateWithoutTimezone(row.startDate),
@@ -191,8 +197,15 @@ const Loan = () => {
             interestRate: row.interestRate,
             status: row.status,
             updatedAt : new Date(row.updatedAt),
-            code : row.code
-        });
+            code : row.code,
+            quotas : row.quotas,
+            currentBalance : row.currentBalance,
+            quotaValue : row.quotaValue,
+            totalPayment : row.totalPayment
+        }
+    );
+    const handleOpenEditDialog = (row) => {
+        setCurrentLoan(getCurrentLoanRow(row));
         handleOpenDialog();
     };
 
@@ -214,7 +227,16 @@ const Loan = () => {
                 setMessage(t('eti_error_action'));
             }
         }
-    }
+    };
+    const handleMakePayment = (row) => {
+        setCurrentLoan(getCurrentLoanRow(row));
+        setMakePayment(true);
+    };
+
+    const handleCloseNewPaymentLoan = () => {
+        setMakePayment(false);
+        getLoans();
+    };
 
     return (
         <div className='divPag'>
@@ -248,7 +270,9 @@ const Loan = () => {
                                 <TableCell>{t('eti_moneylocation')}</TableCell>
                                 <TableCell>{t('eti_amount')}</TableCell>
                                 <TableCell>{t('eti_currentbalance')}</TableCell>
+                                <TableCell>{t('eti_quotas')}</TableCell>
                                 <TableCell>{t('eti_interestrate')}</TableCell>
+                                <TableCell>{t('eti_quota_value')}</TableCell>
                                 <TableCell>{t('eti_registeredby')}</TableCell>
                                 <TableCell>{t('eti_updatedby')}</TableCell>
                                 <TableCell>{t('eti_updatedat')}</TableCell>
@@ -275,12 +299,14 @@ const Loan = () => {
                                         <TableCell>{row.moneyLocation.name}</TableCell>
                                         <TableCell>{formatNumber(row.amount)}</TableCell>
                                         <TableCell>{formatNumber(row.currentBalance)}</TableCell>
-                                        <TableCell>{row.interestRate}</TableCell>
+                                        <TableCell>{row.quotas}</TableCell>
+                                        <TableCell>{row.interestRate}%</TableCell>
+                                        <TableCell>{formatNumber(row.quotaValue)}</TableCell>
                                         <TableCell>{row.createdBy.firstName + ' ' + row.createdBy.lastName}</TableCell>
                                         <TableCell>{row.updatedBy.firstName + ' ' + row.updatedBy.lastName}</TableCell>
                                         <TableCell>{formatDatetime(row.updatedAt)}</TableCell>
                                         <TableCell>
-                                            <div style={{display:'flex'}}>
+                                            <div style={{display:'flex', gap:'5px' }}>
                                                 {row.status === 'CONSTRUCTION' && (
                                                     <>
                                                         <IconButton
@@ -294,7 +320,6 @@ const Loan = () => {
                                                             onConfirm={() => handleActionLoan('start',row.id)}
                                                         >
                                                             <IconButton
-                                                                style={{ marginLeft: '5px' }}
                                                                 className="btnSave"
                                                                 title={t('btn_start_loan')}
                                                             >
@@ -307,7 +332,6 @@ const Loan = () => {
                                                             onConfirm={() => handleActionLoan('cancel',row.id)}
                                                         >
                                                             <IconButton
-                                                                style={{ marginLeft: '5px' }}
                                                                 className="btnDelete"
                                                                 title={t('btn_cancel_loan')}
                                                             >
@@ -320,9 +344,8 @@ const Loan = () => {
                                                 {row.status === 'ACTIVE' && (
                                                     <IconButton
                                                         className="btnSave"
-                                                        style={{ marginLeft: '5px' }}
                                                         title={t('eti_edit')}
-                                                        onClick={() => handleOpenEditDialog(row)}>
+                                                        onClick={() => handleMakePayment(row)}>
                                                         <Payments />
                                                     </IconButton>
                                                 )}
@@ -429,8 +452,20 @@ const Loan = () => {
                                         onChange={(value) => handleValueChange(value, 'amount')}
                                         label={t('eti_amount')}
                                         required
-                                        error={errors.includes('moneyLocation')}
-                                        helperText={errors.includes('moneyLocation') ? t('eti_required_field') : ''}
+                                        error={errors.includes('amount')}
+                                        helperText={errors.includes('amount') ? t('eti_required_field') : ''}
+                                        fullWidth
+                                        margin="normal"
+                                        color="success"
+                                    />
+
+                                    <InputNumber
+                                        value={currentLoan.quotas}
+                                        onChange={(value) => handleValueChange(value, 'quotas')}
+                                        label={t('eti_quotas')}
+                                        required
+                                        error={errors.includes('quotas')}
+                                        helperText={errors.includes('quotas') ? t('eti_required_field') : ''}
                                         fullWidth
                                         margin="normal"
                                         color="success"
@@ -471,6 +506,13 @@ const Loan = () => {
                 
 
             </div>
+            {currentLoan.id && (
+                <LoanPayment 
+                    isOpen={makePayment} 
+                    onClose={() => handleCloseNewPaymentLoan()} 
+                    loan={currentLoan}
+                />
+            )}
         </div>
     );
 };

@@ -117,6 +117,7 @@
     "eti_reason" : "Reason",
     "eti_reason_FUND_CONTRIBUTION" : "Fund contribution",
     "eti_reason_LOAN_DISBURSEMENT" : "Loan",
+    "eti_reason_LOAN_PAYMENT" : "Loan Payment",
     "eti_contribution_date" :"Contribution date",
     "eti_member" : "Member",
     "eti_amount" : "Amount",
@@ -134,5 +135,47 @@
     "btn_cancel_loan" : "Cancel loan",
     "eti_cancel_loan" : "Are you sure you want to cancel this loan? By doing so, the application will be canceled and no money movement will be generated. This action cannot be undone.",
     "eti_error_action" : "Error performing the action",
-    "eti_update_balance" : "Update balance"
+    "eti_update_balance" : "Update balance",
+    "eti_quotas" : "Quotas",
+    "eti_quota_value" : "Quota value",
+    "paymentSelection": {
+        "mainTitle": "Add Payment",
+        "title": "How would you like to pay?",
+        "enterAmount": "Enter amount"
+    },
+    "paymentOptions": {
+        "fullAmount": "Full Amount",
+        "minValue": "Installment Amount",
+        "customAmount": "Custom Amount"
+    },
+    "paymentSteps": {
+        "selection": "Amount",
+        "success": "Success"
+    },
+    "paymentDetails": {
+        "title": "Payment Details",
+        "initialAmount": "Initial Amount",
+        "balance": "Current Balance",
+        "quotaValue": "Installment Value",
+        "currentPayment": "Current Payment",
+        "interestRate": "Interest Rate"
+    },
+    "loanDetails": {
+        "member": "Member",
+        "loanCode": "Loan Code",
+        "status": "Status"
+    },
+    "common": {
+        "confirm": "Confirm Payment",
+        "unknownStep": "Unknown Step"
+    },
+    "paymentSuccess": {
+        "mainTitle": "Payment Successful",
+        "title": "Payment Completed!",
+        "amountPaid": "Amount Paid",
+        "date": "Date",
+        "reference": "Reference Number",
+        "returnToLoan": "Return to Loans"
+    }
+
 }
