@@ -1,6 +1,7 @@
 :root {
   --principal-color: #696ceb;
   --green-color: #4CAF50;
+  --red-color: #D32F2F;
 }
 body {
     font-family: Arial, sans-serif;
@@ -156,25 +157,52 @@ main {
 .divPag {
   display: flex; 
   height: 100%;
+  overflow-x: auto;
 }
-
+.button, .btnEdit, .btnDelete, .btnSave{
+  color: #fff !important;
+}
 .button {
   background: var(--principal-color) !important;
   border-radius: 2px;
-  color: #fff !important;
+  border-color: var(--principal-color) !important;
 }
 
-.buttonRound {
+
+.btnEdit{
   background: var(--principal-color) !important;
-  border-radius: 50% !important;
-  color: #fff !important;
 }
-
+.btnDelete {
+  background: var(--red-color) !important;
+}
 .btnSave {
   background: var(--green-color) !important;
   border-radius: 2px;
-  color: #fff !important;
 }
+
+.btn-disabled {
+  background-color: #cccccc;
+  color: #666666; 
+  border: 1px solid #aaaaaa;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+
+
+.divRight{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 20px;
+}
+.divTitleBtnNew{
+  display: flex ;
+  justify-content: space-between;
+  align-items: center;
+}
+
 
 /* Media Queries para Responsividad */
 @media (max-width: 900px) {

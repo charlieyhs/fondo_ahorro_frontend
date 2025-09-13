@@ -1,4 +1,4 @@
-import {Button} from '@mui/material';
+import {Button, InputAdornment} from '@mui/material';
 import '../css/General.css'
 import { useRef, useState } from 'react';
 import dollarImg from '../assets/images/dollar.svg';
@@ -11,6 +11,7 @@ import { loginUser, validateLogin } from '../utils/logicLoginUtil';
 import LoadingBlocker from '../components/Loaders/LoadingBlocker';
 import { useTranslation } from 'react-i18next';
 import { FROM_LOGIN } from '../constants/storageKeys';
+import { AccountCircle } from '@mui/icons-material';
 
 
 const STYLES = {
@@ -104,7 +105,18 @@ const Login = () => {
                   value={credenciales.username}
                   onChange={ (e) => setCredenciales({...credenciales, username : e.target.value})}
                   error={errorUsername}
-                  setError={setErrorUsername}/>
+                  setError={setErrorUsername}
+                  slotProps={
+                    {
+                        input:{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <AccountCircle/>
+                                </InputAdornment>
+                            ),
+                        },
+                    }
+                  }/>
 
                 <PasswordInputWithToggle 
                   label={t('pg_lgn_placeholderPass')}
