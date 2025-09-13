@@ -29,6 +29,7 @@
     "eti_flag_Spanish": "Spanish language flag",
     "eti_flag_English": "English language flag",
     "pag_home": "Home",
+    "pag_investment": "Investment",
     "pag_members": "Members",
     "pag_moneyboxes": "Money boxes",
     "pag_moneycontributions": "Money contributions",
@@ -86,6 +87,8 @@
     "eti_state_CANCELLED" : "Cancelled",
     "eti_state_CLOSED" : "Closed",
     "eti_state_CONSTRUCTION" : "Construction",
+    "eti_state_PENDING" : "Pending",
+    "eti_state_FINISHED" : "Finished",
     "eti_gender_M" : "Male",
     "eti_gender_F" : "Female",
     "eti_gender_O" : "Other",
@@ -118,6 +121,8 @@
     "eti_reason_FUND_CONTRIBUTION" : "Fund contribution",
     "eti_reason_LOAN_DISBURSEMENT" : "Loan",
     "eti_reason_LOAN_PAYMENT" : "Loan Payment",
+    "eti_reason_INVESTMENT_DISBURSEMENT" : "Disbursement of investment",
+    "eti_reason_INVESTMENT_YIELD" : "Return on investment",
     "eti_contribution_date" :"Contribution date",
     "eti_member" : "Member",
     "eti_amount" : "Amount",
@@ -176,6 +181,22 @@
         "date": "Date",
         "reference": "Reference Number",
         "returnToLoan": "Return to Loans"
-    }
-
+    },
+    "pag_investment_title" : "Investment",
+    "eti_duedate" : "Due Date",
+    "eti_type_investment" : "Type of investment",
+    "eti_type-investment_CD" : "CD",
+    "btn_cancel_investment" : "cancel investment",
+    "eti_cancel_investment" : "Are you sure you want to cancel the investment?",
+    "btn_start_investment" : "Start investment",
+    "eti_start_investment" : "Are you sure you want to start the investment?",
+    "eti_add_payment" : "Add payment",
+    "eti_close_investment" : "Close investment",
+    "eti_question_close_investment" : "Are you sure you want to end the investment?",
+    "pagInvestment" : {
+        "closeInvestment" : {
+            "yield" : "Total performance"
+        }
+    },
+    "eti_yield" : "Yields"
 }

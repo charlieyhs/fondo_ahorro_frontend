@@ -16,6 +16,7 @@ import RateHistory from './pages/RateHistory';
 import MoneyBoxes from './pages/MoneyBoxes';
 import MoneyTransactionType from './pages/MoneyTransactionType';
 import Loan from './pages/Loan';
+import Investment from './pages/Investment';
 
 const ProtectedRouteWithUser = ({ children }) => (
   <PrivateRoute>
@@ -109,6 +110,12 @@ const App = () => {
             <PrivateRoute>
               <RoleSelectionPage />
             </PrivateRoute>
+          }/>
+
+          <Route path='/investment' element={
+            <ProtectedRouteWithUser>
+              <Investment />
+            </ProtectedRouteWithUser>
           }/>
 
           <Route path='/404' element={<NotFound />} />

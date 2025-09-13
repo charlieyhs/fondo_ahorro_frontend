@@ -234,6 +234,7 @@ const Loan = () => {
     };
 
     const handleCloseNewPaymentLoan = () => {
+        setCurrentLoan(emptyLoan());
         setMakePayment(false);
         getLoans();
     };
@@ -344,7 +345,7 @@ const Loan = () => {
                                                 {row.status === 'ACTIVE' && (
                                                     <IconButton
                                                         className="btnSave"
-                                                        title={t('eti_edit')}
+                                                        title={t('eti_add_payment')}
                                                         onClick={() => handleMakePayment(row)}>
                                                         <Payments />
                                                     </IconButton>

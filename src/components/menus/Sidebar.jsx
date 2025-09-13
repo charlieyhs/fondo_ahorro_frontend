@@ -8,7 +8,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { useState } from "react";
 import { useAuth } from '../../hooks/useAuth';
 import LoadingBlocker from '../Loaders/LoadingBlocker';
-import { AccountBalance, CreditScore, CurrencyExchange, Paid, Timeline } from "@mui/icons-material";
+import { AccountBalance, Assessment, CreditScore, CurrencyExchange, Paid, Timeline } from "@mui/icons-material";
 
 const menuItems = [
     {id: 'home', icon: <HomeIcon/> , path: '/home' },
@@ -18,6 +18,7 @@ const menuItems = [
     {id: 'moneyboxes', icon: <AccountBalance/> , path: '/moneyboxes' },
     {id: 'moneytransactiontype', icon: <CurrencyExchange/> , path: '/moneytransactiontype' },
     {id: 'ratehistory', icon: <Timeline/> , path: '/ratehistory' },
+    {id: 'investment', icon: <Assessment/> , path: '/investment' },
 ];
 
 export default function Sidebar(){

@@ -93,19 +93,19 @@ const LoanPayment = ({ isOpen, onClose, loan }) => {
                     onChange={(e) => setPaymentOption(e.target.value)}
                 >
                     <FormControlLabel 
-                    value="full" 
-                    control={<Radio />} 
-                    label={t('paymentOptions.fullAmount')} 
+                        value="full" 
+                        control={<Radio />} 
+                        label={t('paymentOptions.fullAmount')} 
                     />
                     <FormControlLabel 
-                    value="min" 
-                    control={<Radio />} 
-                    label={t('paymentOptions.minValue')} 
+                        value="min" 
+                        control={<Radio />} 
+                        label={t('paymentOptions.minValue')} 
                     />
                     <FormControlLabel 
-                    value="custom" 
-                    control={<Radio />} 
-                    label={t('paymentOptions.customAmount')} 
+                        value="custom" 
+                        control={<Radio />} 
+                        label={t('paymentOptions.customAmount')} 
                     />
                 </RadioGroup>
             </FormControl>
@@ -303,6 +303,7 @@ const LoanPayment = ({ isOpen, onClose, loan }) => {
             onClose={handleClose} 
             maxWidth="sm" 
             fullWidth
+            disableRestoreFocus
         >   
             <div ref={dialogRef}>
                 <Message severity={severityMessage} open={!!message} onClose={() => setMessage(null)}>
