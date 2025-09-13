@@ -9,7 +9,7 @@ import {DatePicker as DatePickerMUI} from '@mui/x-date-pickers/DatePicker';
 import PropTypes from 'prop-types';
 
 
-const DatePicker = ({label, slotProps, value, onChange}) => {
+const DatePicker = ({label, slotProps, value, onChange, maxDate}) => {
     
     const defaultSlotProps = {
         textField: {
@@ -37,7 +37,9 @@ const DatePicker = ({label, slotProps, value, onChange}) => {
                             ...slotProps?.textField,
                         },
                     }}
-                views={['year', 'month', 'day']}/>
+                views={['year', 'month', 'day']}
+                maxDate={maxDate}
+            />
         </LocalizationProvider>
     );
 };
@@ -46,7 +48,8 @@ DatePicker.propTypes = {
     label : PropTypes.string.isRequired,
     slotProps : PropTypes.object,
     value : PropTypes.object,
-    onChange : PropTypes.func
+    onChange : PropTypes.func,
+    maxDate : PropTypes.object
 }
 
 export default DatePicker;

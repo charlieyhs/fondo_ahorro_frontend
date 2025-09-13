@@ -14,6 +14,9 @@ import NotFound from './pages/NotFound';
 import PropTypes from 'prop-types';
 import RateHistory from './pages/RateHistory';
 import MoneyBoxes from './pages/MoneyBoxes';
+import MoneyTransactionType from './pages/MoneyTransactionType';
+import Loan from './pages/Loan';
+import Investment from './pages/Investment';
 
 const ProtectedRouteWithUser = ({ children }) => (
   <PrivateRoute>
@@ -78,6 +81,18 @@ const App = () => {
                 <MoneyBoxes />
             </ProtectedRouteWithUser>
           }/>
+          
+          <Route path='/moneytransactiontype' element={
+            <ProtectedRouteWithUser>
+                <MoneyTransactionType/>
+            </ProtectedRouteWithUser>
+          }/>
+
+          <Route path='/loan' element={
+            <ProtectedRouteWithUser>
+                <Loan/>
+            </ProtectedRouteWithUser>
+          }/>
 
           <Route path='/moneycontributions' element={
             <ProtectedRouteWithUser>
@@ -95,6 +110,12 @@ const App = () => {
             <PrivateRoute>
               <RoleSelectionPage />
             </PrivateRoute>
+          }/>
+
+          <Route path='/investment' element={
+            <ProtectedRouteWithUser>
+              <Investment />
+            </ProtectedRouteWithUser>
           }/>
 
           <Route path='/404' element={<NotFound />} />

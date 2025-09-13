@@ -99,6 +99,7 @@ const RoleSelector = ({ roles, onRoleSelect }) => {
         <Button
           variant='contained'
           size='large'
+          className='button'
           onClick={handleSelection}
           disabled={!selectedRole}
           aria-label={t('eti_continue_as_' + (selectedRole || ''))}
