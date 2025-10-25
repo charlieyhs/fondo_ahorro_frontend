@@ -25,9 +25,3 @@ Este proyecto es un sistema web para la administración de un **fondo de ahorro 
 - **Autenticación**: JWT
 
 ---
-
-## 📦 Instalación
-
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/fondo-ahorro.git
